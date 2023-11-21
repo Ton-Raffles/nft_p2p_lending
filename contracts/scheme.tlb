@@ -1,0 +1,16 @@
+_ owner:MsgAddressInt nft:MsgAddressInt jettonWallet:MsgAddressInt active:Bool offerAccept:uint64 offers:(HashmapE 267)
+  dv:^[ amount:Coins loanDuration:uint64 aprAmount:Coins ] = MasterStorage;
+
+_ dv:^[ master:MsgAddressInt jettonWallet:MsgAddressInt ownerJettonWallet:MsgAddressInt owner:MsgAddressInt ]
+  amount:coins aprAmount:Coins = HelperStorage;
+
+make_offer#5ecf6917 owner:MsgAddressInt helperJettonWallet:MsgAddressInt amount:Coins aprAmount:Coins loanDuration:uint64 = ForwardPayload;
+
+cancellation#72551da1 query_id:uint64 = InternalMsgBody;
+
+accept#5d4df4e8 query_id:uint64 = InternalMsgBody;
+process_accept#654c3af3 query_id:uint64 = InternalMsgBody;
+
+payment_confirmation#788507d7 query_id:uint64 = InternalMsgBody;
+
+change_data#7160e2b5 query_id:uint64 JettonWallet:(Maybe MsgAddressInt) amount:(Maybe Coins) loanDuration:(Maybe uint:64) aprAmount:(Maybe coins) = InternalMsgBody;

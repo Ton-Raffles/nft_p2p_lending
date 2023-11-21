@@ -1,0 +1,6 @@
+const int op::make_offer = 0x5ecf6917;
+const int op::cancellation = 0x72551da1;
+const int op::accept = 0x5d4df4e8;
+const int op::process_accept = 0x654c3af3;
+const int op::payment_confirmation = 0x788507d7;
+const int op::change_data = 0x7160e2b5;
