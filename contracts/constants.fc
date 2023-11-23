@@ -1,6 +1,26 @@
-const int op::make_offer = 0x5ecf6917;
+const int op::make_offer = 0x2c504e2d;
 const int op::cancellation = 0x72551da1;
+const int op::process_cancellation = 0x582fe024;
 const int op::accept = 0x5d4df4e8;
 const int op::process_accept = 0x654c3af3;
 const int op::payment_confirmation = 0x788507d7;
 const int op::change_data = 0x7160e2b5;
+const int op::change_data_helper = 0xad68b31;
+const int op::change_amount_helper = 0x1eae57b3;
+const int op::set_data = 0x18fba435;
+const int op::check = 0x3508c65f;
+const int op::give_away_nft = 0x3c32d198;
+const int op::return_nft = 0x373beb70;
+
+const int op::nft::ownership_assigned = 0x05138d91;
+const int op::nft::transfer = 0x5fcc3d14;
+
+const int op::jetton::transfer_notification = 0x7362d09c;
+const int op::jetton::transfer = 0x0f8a7ea5;
+
+const int error::wrong_sender = 700;
+const int error::offer_alredy_accepted = 701;
+const int error::lending_not_active = 702;
+const int error::not_enough_value = 704;
+
+const int const::fees = 50000000;
