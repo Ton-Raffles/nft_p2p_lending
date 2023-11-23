@@ -124,10 +124,27 @@ export class Helper implements Contract {
         });
     }
 
+    async sendChangeAmount(
+        provider: ContractProvider,
+        via: Sender,
+        value: bigint,
+        opts: {
+            queryId: bigint;
+            amount: bigint;
+        }
+    ) {
+        await provider.internal(via, {
+            value,
+            sendMode: SendMode.PAY_GAS_SEPARATELY,
+            body: beginCell().storeUint(0x1eae57b3, 32).storeUint(opts.queryId, 64).storeCoins(opts.amount).endCell(),
+        });
+    }
+
     async getContractData(provider: ContractProvider): Promise<{
         master: Address;
         jettonWallet: Address;
         ownerJettonWallet: Address;
+        paidAmount: bigint;
         owner: Address;
         masterOwner: Address;
         platform: Address;
@@ -141,6 +158,7 @@ export class Helper implements Contract {
             master: res.readAddress(),
             jettonWallet: res.readAddress(),
             ownerJettonWallet: res.readAddress(),
+            paidAmount: res.readBigNumber(),
             owner: res.readAddress(),
             masterOwner: res.readAddress(),
             platform: res.readAddress(),

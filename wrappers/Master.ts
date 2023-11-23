@@ -116,6 +116,7 @@ export class Master implements Contract {
         loanDuration: bigint;
         aprAmount: bigint;
         helperCode: Cell;
+        platform: Address;
     }> {
         const res = (await provider.get('get_contract_data', [])).stack;
         return {
@@ -134,13 +135,15 @@ export class Master implements Contract {
             loanDuration: res.readBigNumber(),
             aprAmount: res.readBigNumber(),
             helperCode: res.readCell(),
+            platform: res.readAddress(),
         };
     }
 
     async getHelper(provider: ContractProvider, jettonWallet: Address, user: Address): Promise<Helper> {
         const stack = (
             await provider.get('get_helper_address', [
-                { type: 'slice', cell: beginCell().storeAddress(jettonWallet).storeAddress(user).endCell() },
+                { type: 'slice', cell: beginCell().storeAddress(jettonWallet).endCell() },
+                { type: 'slice', cell: beginCell().storeAddress(user).endCell() },
             ])
         ).stack;
         return Helper.createFromAddress(stack.readAddress());

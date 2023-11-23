@@ -20,6 +20,7 @@ const int op::jetton::transfer = 0x0f8a7ea5;
 const int error::wrong_sender = 700;
 const int error::offer_alredy_accepted = 701;
 const int error::lending_not_active = 702;
-const int error::not_enough_value = 704;
+const int error::not_enough_value = 703;
+const int error::not_correct_value = 704;
 
 const int const::fees = 50000000;
