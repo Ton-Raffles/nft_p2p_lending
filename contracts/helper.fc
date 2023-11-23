@@ -83,6 +83,9 @@ global slice context::sender;
         throw_unless(error::wrong_sender, equal_slices(context::sender, data::master));
         
         data::jetton_wallet = in_msg_body~load_msg_addr();
+        data::amount = in_msg_body~load_coins();
+        data::loan_duration = in_msg_body~load_uint(64);
+        data::apr_amount = in_msg_body~load_coins();
     }
 
     elseif (context::op == op::change_data_helper) {
@@ -266,4 +269,10 @@ global slice context::sender;
     }
 
     save_data();
+}
+
+(slice, slice, slice, int, slice, slice, slice, int, int, int) get_contract_data() {
+    load_data();
+
+    return (data::master, data::jetton_wallet, data::owner_jetton_wallet, data::paid_amount, data::owner, data::master_owner, data::platform, data::amount, data::loan_duration, data::apr_amount);
 }

@@ -14,9 +14,7 @@ process_cancellation#582fe024 query_id:uint64 = InternalMsgBody;
 accept#5d4df4e8 query_id:uint64 = InternalMsgBody;
 process_accept#654c3af3 query_id:uint64 = InternalMsgBody;
 
-payment_confirmation#788507d7 query_id:uint64 = InternalMsgBody;
-
-set_data#18fba435 query_id:uint64 JettonWallet:MsgAddressInt = InternalMsgBody;
+set_data#4a3ce6d9 query_id:uint64 JettonWallet:MsgAddressInt amount:coins loanDuration:uint64 aprAmount:Coins = InternalMsgBody;
 
 change_data#7160e2b5 query_id:uint64 JettonWallet:(Maybe MsgAddressInt) amount:(Maybe Coins) loanDuration:(Maybe uint:64) aprAmount:(Maybe coins) = InternalMsgBody;
 change_data_helper#ad68b31 query_id:uint64 loanDuration:(Maybe uint:64) aprAmount:(Maybe coins) = InternalMsgBody;
