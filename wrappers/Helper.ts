@@ -140,6 +140,46 @@ export class Helper implements Contract {
         });
     }
 
+    async sendOffer(
+        provider: ContractProvider,
+        via: Sender,
+        value: bigint,
+        opts: {
+            queryId: bigint;
+            loanDuration: bigint;
+            aprAmount: bigint;
+            extraReward: bigint;
+        }
+    ) {
+        await provider.internal(via, {
+            value,
+            sendMode: SendMode.PAY_GAS_SEPARATELY,
+            body: beginCell()
+                .storeUint(0x7c820f0d, 32)
+                .storeUint(opts.queryId, 64)
+                .storeUint(opts.loanDuration, 64)
+                .storeCoins(opts.aprAmount)
+                .storeCoins(opts.extraReward)
+                .endCell(),
+        });
+    }
+
+    async sendConsider(
+        provider: ContractProvider,
+        via: Sender,
+        value: bigint,
+        opts: {
+            queryId: bigint;
+            flag: bigint;
+        }
+    ) {
+        await provider.internal(via, {
+            value,
+            sendMode: SendMode.PAY_GAS_SEPARATELY,
+            body: beginCell().storeUint(0x648fa1a7, 32).storeUint(opts.queryId, 64).storeUint(opts.flag, 1).endCell(),
+        });
+    }
+
     async getContractData(provider: ContractProvider): Promise<{
         master: Address;
         jettonWallet: Address;
@@ -152,6 +192,10 @@ export class Helper implements Contract {
         loanDuration: bigint;
         aprAmount: bigint;
         accepted: bigint;
+        offerLoanDuration: bigint;
+        offerAprAmount: bigint;
+        offerExtraReward: bigint;
+        offerTurn: Address;
     }> {
         const res = (await provider.get('get_contract_data', [])).stack;
         return {
@@ -166,6 +210,10 @@ export class Helper implements Contract {
             loanDuration: res.readBigNumber(),
             aprAmount: res.readBigNumber(),
             accepted: res.readBigNumber(),
+            offerLoanDuration: res.readBigNumber(),
+            offerAprAmount: res.readBigNumber(),
+            offerExtraReward: res.readBigNumber(),
+            offerTurn: res.readAddress(),
         };
     }
 }

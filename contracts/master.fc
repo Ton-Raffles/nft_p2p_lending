@@ -76,6 +76,12 @@ global slice context::sender;
             .store_uint(0, 64)
             .store_coins(0)
             .store_uint(0, 64)
+            .store_ref(begin_cell()
+                .store_uint(0, 64)
+                .store_coins(0)
+                .store_coins(0)
+                .store_slice(my_address())
+            .end_cell())
         .end_cell())
         .store_uint(0, 1)
     .end_cell();

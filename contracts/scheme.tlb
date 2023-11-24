@@ -3,7 +3,8 @@ _ owner:MsgAddressInt nft:MsgAddressInt jettonWallet:MsgAddressInt active:Bool o
 
 _ dv:^[ master:MsgAddressInt jettonWallet:MsgAddressInt ownerJettonWallet:MsgAddressInt paid_amount:Coins ]
   dm:^[ owner:MsgAddressInt masterOwner:MsgAddressInt platform:MsgAddressInt ] 
-  amount:coins loanDuration:uint64 aprAmount:Coins accepted:Bool = HelperStorage;
+  amount:coins loanDuration:uint64 aprAmount:Coins accepted:Bool
+  offer:^[ loanDuration:uint64 aprAmount:Coins extra_reward:Coins turn:MsgAddressInt] = HelperStorage;
 
 make_offer#2c504e2d owner:MsgAddressInt helperJettonWallet:MsgAddressInt ownerJettonWallet:MsgAddressInt 
   dv:^[ amount:Coins aprAmount:Coins loanDuration:uint64 ] = ForwardPayload;
@@ -23,3 +24,6 @@ change_amount_helper#1eae57b3 = ForwardPayload;
 check#3508c65f query_id:uint64 = InternalMsgBody;
 give_away_nft#3c32d198 query_id:uint64 user:MsgAddressInt = InternalMsgBody;
 return_nft#373beb70 query_id:uint64 = InternalMsgBody;
+
+to_offer#7c820f0d query_id:uint64 loanDuration:uint64 aprAmount:Coins extra_reward:Coins = InternalMsgBody;
+consider#648fa1a7 query_id:uint64 flag:Bool = InternalMsgBody;

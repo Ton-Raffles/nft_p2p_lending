@@ -10,6 +10,8 @@ const int op::set_data = 0x4a3ce6d9;
 const int op::check = 0x3508c65f;
 const int op::give_away_nft = 0x3c32d198;
 const int op::return_nft = 0x373beb70;
+const int op::to_offer = 0x7c820f0d;
+const int op::consider = 0x648fa1a7;
 
 const int op::nft::ownership_assigned = 0x05138d91;
 const int op::nft::transfer = 0x5fcc3d14;
@@ -22,5 +24,6 @@ const int error::offer_alredy_accepted = 701;
 const int error::lending_not_active = 702;
 const int error::not_enough_value = 703;
 const int error::not_correct_value = 704;
+const int error::offer_not_accepted = 705;
 
 const int const::fees = 50000000;
