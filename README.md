@@ -1,4 +1,4 @@
-# NFT_lending
+# nft_p2p_lending
 
 ## Project structure
 
