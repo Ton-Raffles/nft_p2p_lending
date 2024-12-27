@@ -1,0 +1,70 @@
+() send_jettons(slice jetton_wallet, int value, int amount, slice user) impure inline {
+    if (value <= 0) {
+        return ();
+    }
+
+    send_raw_message(begin_cell()
+        .store_uint(0x18, 6)
+        .store_slice(jetton_wallet)
+        .store_coins(value)
+        .store_uint(0, 107)
+        .store_uint(op::jetton::transfer, 32)
+        .store_uint(context::query_id, 64)
+        .store_coins(amount)
+        .store_slice(user)
+        .store_uint(0, 8)
+    .end_cell(), 1);
+}
+
+() send_nft(slice nft_address, int value, int query_id, slice destination) impure inline {
+    if (value <= 0) {
+        return ();
+    }
+
+    send_raw_message(begin_cell()
+        .store_uint(0x18, 6)
+        .store_slice(nft_address)
+        .store_coins(value)
+        .store_uint(0, 107)
+        .store_uint(op::nft::transfer, 32)
+        .store_uint(query_id, 64)
+        .store_slice(destination)
+        .store_uint(0, 8)
+    .end_cell(), 1);
+}
+
+() send_cancellation(slice to, int query_id) impure inline {
+    send_raw_message(begin_cell()
+        .store_uint(0x18, 6)
+        .store_slice(to)
+        .store_coins(get_compute_fee(0, const::fee_const))
+        .store_uint(0, 107)
+        .store_uint(op::cancellation, 32)
+        .store_uint(query_id, 64)
+    .end_cell(), 1);
+}
+
+() send_destroy(slice to) impure inline {
+    send_raw_message(begin_cell()
+        .store_uint(0x18, 6)
+        .store_slice(to)
+        .store_coins(0)
+        .store_uint(0, 107)
+    .end_cell(), 128 + 32);
+}
+
+() send_set_data(slice to, cell stateinit, int query_id, slice helper_jetton_wallet, int offer_amount, int loan_duration, int apr_amount) impure inline {
+    send_raw_message(begin_cell()
+        .store_uint(0x18, 6)
+        .store_slice(to)
+        .store_coins(get_compute_fee(0, const::fee_const))
+        .store_uint(6, 108)
+        .store_ref(stateinit)
+        .store_uint(op::set_data, 32)
+        .store_uint(query_id, 64)
+        .store_slice(helper_jetton_wallet)
+        .store_coins(offer_amount)
+        .store_uint(loan_duration, 64)
+        .store_coins(apr_amount)
+    .end_cell(), 1);
+}

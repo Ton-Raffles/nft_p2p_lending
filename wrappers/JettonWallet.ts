@@ -1,4 +1,4 @@
-import { Address, beginCell, Cell, Contract, contractAddress, ContractProvider, Sender, SendMode } from 'ton-core';
+import { Address, beginCell, Cell, Contract, contractAddress, ContractProvider, Sender, SendMode } from '@ton/core';
 
 export type JettonWalletConfig = {
     owner: Address;
@@ -16,7 +16,10 @@ export function jettonWalletConfigToCell(config: JettonWalletConfig): Cell {
 }
 
 export class JettonWallet implements Contract {
-    constructor(readonly address: Address, readonly init?: { code: Cell; data: Cell }) {}
+    constructor(
+        readonly address: Address,
+        readonly init?: { code: Cell; data: Cell },
+    ) {}
 
     static createFromAddress(address: Address) {
         return new JettonWallet(address);
@@ -43,7 +46,7 @@ export class JettonWallet implements Contract {
         forwardValue: bigint,
         recipient: Address,
         amount: bigint,
-        forwardPayload: Cell
+        forwardPayload: Cell,
     ) {
         await provider.internal(via, {
             sendMode: SendMode.PAY_GAS_SEPARATELY,

@@ -8,7 +8,7 @@ import {
     Dictionary,
     Sender,
     SendMode,
-} from 'ton-core';
+} from '@ton/core';
 import { Helper } from './Helper';
 
 export type MasterConfig = {
@@ -21,6 +21,7 @@ export type MasterConfig = {
     aprAmount: bigint;
     helperCode: Cell;
     platform: Address;
+    nftFee: bigint;
 };
 
 export function masterConfigToCell(config: MasterConfig): Cell {
@@ -38,13 +39,17 @@ export function masterConfigToCell(config: MasterConfig): Cell {
                 .storeCoins(config.aprAmount)
                 .storeRef(config.helperCode)
                 .storeAddress(config.platform)
-                .endCell()
+                .storeCoins(config.nftFee)
+                .endCell(),
         )
         .endCell();
 }
 
 export class Master implements Contract {
-    constructor(readonly address: Address, readonly init?: { code: Cell; data: Cell }) {}
+    constructor(
+        readonly address: Address,
+        readonly init?: { code: Cell; data: Cell },
+    ) {}
 
     static createFromAddress(address: Address) {
         return new Master(address);
@@ -70,7 +75,7 @@ export class Master implements Contract {
         value: bigint,
         opts: {
             queryId: bigint;
-        }
+        },
     ) {
         await provider.internal(via, {
             value,
@@ -89,7 +94,7 @@ export class Master implements Contract {
             amount?: bigint;
             loanDuration?: bigint;
             aprAmount?: bigint;
-        }
+        },
     ) {
         await provider.internal(via, {
             value,

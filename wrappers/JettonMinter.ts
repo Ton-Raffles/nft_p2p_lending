@@ -1,4 +1,4 @@
-import { Address, beginCell, Cell, Contract, contractAddress, ContractProvider, Sender, SendMode } from 'ton-core';
+import { Address, beginCell, Cell, Contract, contractAddress, ContractProvider, Sender, SendMode } from '@ton/core';
 
 export type JettonMinterConfig = {
     admin: Address;
@@ -16,7 +16,10 @@ export function jettonMinterConfigToCell(config: JettonMinterConfig): Cell {
 }
 
 export class JettonMinter implements Contract {
-    constructor(readonly address: Address, readonly init?: { code: Cell; data: Cell }) {}
+    constructor(
+        readonly address: Address,
+        readonly init?: { code: Cell; data: Cell },
+    ) {}
 
     static createFromAddress(address: Address) {
         return new JettonMinter(address);
@@ -42,7 +45,7 @@ export class JettonMinter implements Contract {
         value: bigint,
         forwardValue: bigint,
         recipient: Address,
-        amount: bigint
+        amount: bigint,
     ) {
         await provider.internal(via, {
             sendMode: SendMode.PAY_GAS_SEPARATELY,
@@ -60,7 +63,7 @@ export class JettonMinter implements Contract {
                         .storeAddress(this.address)
                         .storeCoins(0)
                         .storeUint(0, 1)
-                        .endCell()
+                        .endCell(),
                 )
                 .endCell(),
             value: value + forwardValue,

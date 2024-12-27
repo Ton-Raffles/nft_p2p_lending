@@ -8,7 +8,7 @@ import {
     Sender,
     SendMode,
     toNano,
-} from 'ton-core';
+} from '@ton/core';
 import { NFTItem } from './NFTItem';
 
 export type NFTCollectionConfig = {
@@ -31,13 +31,16 @@ export function NFTCollectionConfigToCell(config: NFTCollectionConfig): Cell {
                 .storeUint(config.royaltyFactor, 16)
                 .storeUint(config.royaltyBase, 16)
                 .storeAddress(config.owner)
-                .endCell()
+                .endCell(),
         )
         .endCell();
 }
 
 export class NFTCollection implements Contract {
-    constructor(readonly address: Address, readonly init?: { code: Cell; data: Cell }) {}
+    constructor(
+        readonly address: Address,
+        readonly init?: { code: Cell; data: Cell },
+    ) {}
 
     static createFromAddress(address: Address) {
         return new NFTCollection(address);

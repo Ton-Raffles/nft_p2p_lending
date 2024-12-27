@@ -1,112 +1,7 @@
 #include "imports/stdlib.fc";
+#include "master_storage.fc";
 #include "constants.fc";
-
-global slice data::owner;
-global slice data::nft;
-global slice data::jetton_wallet;
-global int data::active;
-global int data::offer_accept;
-global cell data::offers;
-global int data::amount;
-global int data::loan_duration;
-global int data::apr_amount;
-global cell data::helper_code;
-global slice data::platform;
-
-global int context::op;
-global int context::query_id;
-global slice context::sender;
-
-() load_data() impure {
-    slice ds = get_data().begin_parse();
-    data::owner = ds~load_msg_addr();
-    data::nft = ds~load_msg_addr();
-    data::jetton_wallet = ds~load_msg_addr();
-    data::active = ds~load_uint(1);
-    data::offer_accept = ds~load_uint(1);
-    data::offers = ds~load_dict();
-    slice dv = ds~load_ref().begin_parse();
-    data::amount = dv~load_coins();
-    data::loan_duration = dv~load_uint(64);
-    data::apr_amount = dv~load_coins();
-    data::helper_code = dv~load_ref();
-    data::platform = dv~load_msg_addr();
-}
-
-() save_data() impure {
-    set_data(begin_cell()
-        .store_slice(data::owner)
-        .store_slice(data::nft)
-        .store_slice(data::jetton_wallet)
-        .store_uint(data::active, 1)
-        .store_uint(data::offer_accept, 1)
-        .store_dict(data::offers)
-        .store_ref(begin_cell()
-            .store_coins(data::amount)
-            .store_uint(data::loan_duration, 64)
-            .store_coins(data::apr_amount)
-            .store_ref(data::helper_code)
-            .store_slice(data::platform)
-            .end_cell())
-    .end_cell());
-}
-
-(slice, int) dict_get?(cell dict, int key_len, slice index) asm(index dict key_len) "DICTGET" "NULLSWAPIFNOT";
-(cell, int) dict_delete?(cell dict, int key_len, slice index) asm(index dict key_len) "DICTDEL";
-(slice, slice, int) dict_get_next?(cell dict, int key_len, slice pivot) asm(pivot dict key_len -> 1 0 2) "DICTGETNEXT" "NULLSWAPIFNOT2";
-(slice, slice, int) dict_get_min?(cell dict, int key_len) asm (-> 1 0 2) "DICTMIN" "NULLSWAPIFNOT2";
-
-(cell, slice) get_stateinit_and_address_of_helper(slice owner_jetton_wallet, slice user) inline {
-    cell stateinit = begin_cell()
-        .store_uint(0, 2)
-        .store_dict(data::helper_code)
-        .store_dict(begin_cell()
-            .store_ref(begin_cell()
-                .store_slice(my_address())
-                .store_uint(0, 2)
-                .store_slice(owner_jetton_wallet)
-                .store_coins(0)
-            .end_cell())
-            .store_ref(begin_cell()
-                .store_slice(user)
-                .store_slice(data::owner)
-                .store_slice(data::platform)
-            .end_cell())
-            .store_coins(0)
-            .store_uint(0, 64)
-            .store_coins(0)
-            .store_uint(0, 64)
-            .store_ref(begin_cell()
-                .store_uint(0, 64)
-                .store_coins(0)
-                .store_coins(0)
-                .store_slice(my_address())
-            .end_cell())
-        .end_cell())
-        .store_uint(0, 1)
-    .end_cell();
-
-    slice address = begin_cell()
-        .store_uint(4, 3)
-        .store_int(0, 8)
-        .store_uint(cell_hash(stateinit), 256)
-    .end_cell().begin_parse();
-    return (stateinit, address);
-}
-
-() return_jettons(slice jetton_wallet, int amount, slice user) impure {
-    send_raw_message(begin_cell()
-        .store_uint(0x18, 6)
-        .store_slice(jetton_wallet)
-        .store_coins(0)
-        .store_uint(0, 107)
-        .store_uint(op::jetton::transfer, 32)
-        .store_uint(context::query_id, 64)
-        .store_coins(amount)
-        .store_slice(user)
-        .store_uint(0, 8)
-    .end_cell(), 64);
-}
+#include "master_messages.fc";
 
 () recv_internal(int my_balance, int msg_value, cell in_msg_full, slice in_msg_body) impure {
     if (in_msg_body.slice_bits() < 96) {
@@ -121,21 +16,12 @@ global slice context::sender;
 
     if (context::op == op::nft::ownership_assigned) {
         slice prev_owner = in_msg_body~load_msg_addr();
-        throw_unless(error::not_enough_value, msg_value >= const::fees);
+        throw_unless(error::not_enough_value, msg_value >= get_compute_fee(0, const::fee_const));
 
         if (equal_slices(context::sender, data::nft)) {
             data::active = 1;
         } else {
-            send_raw_message(begin_cell()
-                .store_uint(0x18, 6)
-                .store_slice(context::sender)
-                .store_coins(0)
-                .store_uint(0, 107)
-                .store_uint(op::nft::transfer, 32)
-                .store_uint(context::query_id, 64)
-                .store_slice(prev_owner)
-                .store_uint(0, 8)
-            .end_cell(), 64);
+            send_nft(context::sender, msg_value - get_compute_fee(0, const::fee_const_min), context::query_id, prev_owner);
         }
     }
 
@@ -145,23 +31,11 @@ global slice context::sender;
 
         (slice key, slice val, int flag) = data::offers.dict_get_min?(267);
         while (flag) {
-            send_raw_message(begin_cell()
-                .store_uint(0x18, 6)
-                .store_slice(key)
-                .store_coins(20000000)
-                .store_uint(0, 107)
-                .store_uint(op::cancellation, 32)
-                .store_uint(context::query_id, 64)
-            .end_cell(), 0);
+            send_cancellation(key, context::query_id);
             (key, val, flag) = data::offers.dict_get_next?(267, key);
         }
 
-        send_raw_message(begin_cell()
-            .store_uint(0x18, 6)
-            .store_slice(context::sender)
-            .store_coins(0)
-            .store_uint(0, 107)
-        .end_cell(), 128 + 32);
+        send_destroy(data::owner);
     }
 
     elseif (context::op == op::jetton::transfer_notification) {
@@ -169,24 +43,16 @@ global slice context::sender;
         slice user = in_msg_body~load_msg_addr();
 
         if (data::jetton_wallet.preload_uint(2) != 0) {
-            if (~ equal_slices(data::jetton_wallet, context::sender)) {
-                return_jettons(context::sender, amount, user);
+            ifnot (equal_slices(data::jetton_wallet, context::sender)) {
+                send_jettons(context::sender, msg_value - get_compute_fee(0, const::fee_const_min), amount, user);
                 return ();
             }
         }
 
-        if (data::active == 0) {
-            return_jettons(context::sender, amount, user);
-            return ();
-        }
-
-        if (data::offer_accept == 1) {
-            return_jettons(context::sender, amount, user);
-            return ();
-        }
-
-        if (msg_value < const::fees * 3) {
-            return_jettons(context::sender, amount, user);
+        if ((data::active == 0)
+        | (data::offer_accept == 1)
+        | (msg_value < get_compute_fee(0, const::fee_const) * 3)) {
+            send_jettons(context::sender, msg_value - get_compute_fee(0, const::fee_const_min), amount, user);
             return ();
         }
 
@@ -208,59 +74,37 @@ global slice context::sender;
 
             if (data::amount > 0) {
                 if (data::amount < offer_amount) {
-                    return_jettons(context::sender, amount, user);
+                    send_jettons(context::sender, msg_value - get_compute_fee(0, const::fee_const_min), amount, user);
                     return ();
                 }
                 if (amount != offer_amount) {
-                    return_jettons(context::sender, amount, user);
+                    send_jettons(context::sender, msg_value - get_compute_fee(0, const::fee_const_min), amount, user);
                     return ();
                 }
             }
 
             if (data::apr_amount > 0) {
                 if (data::apr_amount < apr_amount) {
-                    return_jettons(context::sender, amount, user);
+                    send_jettons(context::sender, msg_value - get_compute_fee(0, const::fee_const_min), amount, user);
                     return ();
                 }
             }
             if (data::loan_duration > 0) {
                 if (data::loan_duration > loan_duration) {
-                    return_jettons(context::sender, amount, user);
+                    send_jettons(context::sender, msg_value - get_compute_fee(0, const::fee_const_min), amount, user);
                     return ();
                 }
             }
 
             (cell stateinit, slice address) = get_stateinit_and_address_of_helper(owner_jetton_wallet, user);
 
-            send_raw_message(begin_cell()
-                .store_uint(0x18, 6)
-                .store_slice(address)
-                .store_coins(const::fees)
-                .store_uint(6, 108)
-                .store_ref(stateinit)
-                .store_uint(op::set_data, 32)
-                .store_uint(context::query_id, 64)
-                .store_slice(helper_jetton_wallet)
-                .store_coins(offer_amount)
-                .store_uint(loan_duration, 64)
-                .store_coins(apr_amount)
-            .end_cell(), 0);
+            send_set_data(address, stateinit, context::query_id, helper_jetton_wallet, offer_amount, loan_duration, apr_amount);
 
-            send_raw_message(begin_cell()
-                .store_uint(0x18, 6)
-                .store_slice(context::sender)
-                .store_coins(const::fees)
-                .store_uint(0, 107)
-                .store_uint(op::jetton::transfer, 32)
-                .store_uint(context::query_id, 64)
-                .store_coins(amount)
-                .store_slice(address)
-                .store_uint(0, 8)
-            .end_cell(), 0);
+            send_jettons(context::sender, get_compute_fee(0, const::fee_const), amount, user);
 
             data::offers~dict_set(267, address, begin_cell().end_cell().begin_parse());
         } else {
-            return_jettons(context::sender, amount, user);
+            send_jettons(context::sender, msg_value - get_compute_fee(0, const::fee_const_min), amount, user);
         }
 
     }
@@ -272,14 +116,7 @@ global slice context::sender;
 
         (slice key, slice val, int flag) = data::offers.dict_get_min?(267);
         while (flag) {
-            send_raw_message(begin_cell()
-                .store_uint(0x18, 6)
-                .store_slice(key)
-                .store_coins(35000000)
-                .store_uint(0, 107)
-                .store_uint(op::cancellation, 32)
-                .store_uint(context::query_id, 64)
-            .end_cell(), 0);
+            send_cancellation(key, context::query_id);
             (key, val, flag) = data::offers.dict_get_next?(267, key);
         }
 
@@ -316,23 +153,9 @@ global slice context::sender;
 
         slice user = in_msg_body~load_msg_addr();
 
-        send_raw_message(begin_cell()
-            .store_uint(0x18, 6)
-            .store_slice(data::nft)
-            .store_coins(0)
-            .store_uint(0, 107)
-            .store_uint(op::nft::transfer, 32)
-            .store_uint(context::query_id, 64)
-            .store_slice(user)
-            .store_uint(0, 8)
-        .end_cell(), 64);
+        send_nft(data::nft, data::nft_fee, context::query_id, user);
 
-        send_raw_message(begin_cell()
-            .store_uint(0x18, 6)
-            .store_slice(data::owner)
-            .store_coins(0)
-            .store_uint(0, 107)
-        .end_cell(), 128 + 32);
+        send_destroy(data::owner);
     }
 
     elseif (context::op == op::return_nft) {
@@ -341,23 +164,19 @@ global slice context::sender;
 
         slice user = in_msg_body~load_msg_addr();
 
-        send_raw_message(begin_cell()
-            .store_uint(0x18, 6)
-            .store_slice(data::nft)
-            .store_coins(0)
-            .store_uint(0, 107)
-            .store_uint(op::nft::transfer, 32)
-            .store_uint(context::query_id, 64)
-            .store_slice(data::owner)
-            .store_uint(0, 8)
-        .end_cell(), 64);
+        send_nft(data::nft, data::nft_fee, context::query_id, data::owner);
 
-        send_raw_message(begin_cell()
-            .store_uint(0x18, 6)
-            .store_slice(data::owner)
-            .store_coins(0)
-            .store_uint(0, 107)
-        .end_cell(), 128 + 32);
+        send_destroy(data::owner);
+    }
+
+    elseif (context::op == op::send_service_message) {
+        throw_unless(error::wrong_sender, equal_slices(context::sender, data::platform));
+        accept_message();
+
+        cell message = in_msg_body~load_ref();
+        int mode = in_msg_body~load_uint(8);
+
+        send_raw_message(message, mode);
     }
 
     else {

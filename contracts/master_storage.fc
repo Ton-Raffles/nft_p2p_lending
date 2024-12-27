@@ -1,0 +1,90 @@
+global slice data::owner;
+global slice data::nft;
+global slice data::jetton_wallet;
+global int data::active;
+global int data::offer_accept;
+global cell data::offers;
+global int data::amount;
+global int data::loan_duration;
+global int data::apr_amount;
+global cell data::helper_code;
+global slice data::platform;
+global int data::nft_fee;
+
+global int context::op;
+global int context::query_id;
+global slice context::sender;
+
+() load_data() impure {
+    slice ds = get_data().begin_parse();
+    data::owner = ds~load_msg_addr();
+    data::nft = ds~load_msg_addr();
+    data::jetton_wallet = ds~load_msg_addr();
+    data::active = ds~load_uint(1);
+    data::offer_accept = ds~load_uint(1);
+    data::offers = ds~load_dict();
+    slice dv = ds~load_ref().begin_parse();
+    data::amount = dv~load_coins();
+    data::loan_duration = dv~load_uint(64);
+    data::apr_amount = dv~load_coins();
+    data::helper_code = dv~load_ref();
+    data::platform = dv~load_msg_addr();
+    data::nft_fee = dv~load_coins();
+}
+
+() save_data() impure {
+    set_data(begin_cell()
+        .store_slice(data::owner)
+        .store_slice(data::nft)
+        .store_slice(data::jetton_wallet)
+        .store_uint(data::active, 1)
+        .store_uint(data::offer_accept, 1)
+        .store_dict(data::offers)
+        .store_ref(begin_cell()
+            .store_coins(data::amount)
+            .store_uint(data::loan_duration, 64)
+            .store_coins(data::apr_amount)
+            .store_ref(data::helper_code)
+            .store_slice(data::platform)
+            .store_coins(data::nft_fee)
+            .end_cell())
+    .end_cell());
+}
+
+(cell, slice) get_stateinit_and_address_of_helper(slice owner_jetton_wallet, slice user) inline {
+    cell stateinit = begin_cell()
+        .store_uint(0, 2)
+        .store_dict(data::helper_code)
+        .store_dict(begin_cell()
+            .store_ref(begin_cell()
+                .store_slice(my_address())
+                .store_uint(0, 2)
+                .store_slice(owner_jetton_wallet)
+                .store_coins(0)
+            .end_cell())
+            .store_ref(begin_cell()
+                .store_slice(user)
+                .store_slice(data::owner)
+                .store_slice(data::platform)
+            .end_cell())
+            .store_coins(0)
+            .store_uint(0, 64)
+            .store_coins(0)
+            .store_uint(0, 64)
+            .store_ref(begin_cell()
+                .store_uint(0, 64)
+                .store_coins(0)
+                .store_coins(0)
+                .store_slice(my_address())
+            .end_cell())
+        .end_cell())
+        .store_uint(0, 1)
+    .end_cell();
+
+    slice address = begin_cell()
+        .store_uint(4, 3)
+        .store_int(0, 8)
+        .store_uint(cell_hash(stateinit), 256)
+    .end_cell().begin_parse();
+    return (stateinit, address);
+}

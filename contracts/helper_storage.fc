@@ -1,0 +1,67 @@
+global slice data::master;
+global slice data::jetton_wallet;
+global slice data::owner_jetton_wallet;
+global int data::paid_amount;
+global slice data::owner;
+global slice data::master_owner;
+global slice data::platform;
+global int data::amount;
+global int data::loan_duration;
+global int data::apr_amount;
+global int data::accepted;
+global int data::offer::loan_duration;
+global int data::offer::apr_amount;
+global int data::offer::extra_reward;
+global slice data::offer::turn;
+
+global int context::op;
+global int context::query_id;
+global slice context::sender;
+
+() load_data() impure {
+    slice ds = get_data().begin_parse();
+    slice dv = ds~load_ref().begin_parse();
+    slice dm = ds~load_ref().begin_parse();
+    slice offer = ds~load_ref().begin_parse();
+    data::master = dv~load_msg_addr();
+    data::jetton_wallet = dv~load_msg_addr();
+    data::owner_jetton_wallet = dv~load_msg_addr();
+    data::paid_amount = dv~load_coins();
+    data::owner = dm~load_msg_addr();
+    data::master_owner = dm~load_msg_addr();
+    data::platform = dm~load_msg_addr();
+    data::amount = ds~load_coins();
+    data::loan_duration = ds~load_uint(64);
+    data::apr_amount = ds~load_coins();
+    data::accepted = ds~load_uint(64);
+    data::offer::loan_duration = offer~load_uint(64);
+    data::offer::apr_amount = offer~load_coins();
+    data::offer::extra_reward = offer~load_coins();
+    data::offer::turn = offer~load_msg_addr();
+}
+
+() save_data() impure {
+    set_data(begin_cell()
+        .store_ref(begin_cell()
+            .store_slice(data::master)
+            .store_slice(data::jetton_wallet)
+            .store_slice(data::owner_jetton_wallet)
+            .store_coins(data::paid_amount)
+        .end_cell())
+        .store_ref(begin_cell()
+            .store_slice(data::owner)
+            .store_slice(data::master_owner)
+            .store_slice(data::platform)
+        .end_cell())
+        .store_coins(data::amount)
+        .store_uint(data::loan_duration, 64)
+        .store_coins(data::apr_amount)
+        .store_uint(data::accepted, 64)
+        .store_ref(begin_cell()
+            .store_uint(data::offer::loan_duration, 64)
+            .store_coins(data::offer::apr_amount)
+            .store_coins(data::offer::extra_reward)
+            .store_slice(data::offer::turn)
+        .end_cell())
+    .end_cell());
+}

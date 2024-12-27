@@ -1,7 +1,10 @@
-import { Address, beginCell, Cell, Contract, ContractProvider, Sender, SendMode, toNano } from 'ton-core';
+import { Address, beginCell, Cell, Contract, ContractProvider, Sender, SendMode, toNano } from '@ton/core';
 
 export class NFTItem implements Contract {
-    constructor(readonly address: Address, readonly init?: { code: Cell; data: Cell }) {}
+    constructor(
+        readonly address: Address,
+        readonly init?: { code: Cell; data: Cell },
+    ) {}
 
     static createFromAddress(address: Address) {
         return new NFTItem(address);
@@ -21,7 +24,7 @@ export class NFTItem implements Contract {
         value: bigint,
         recipient: Address,
         forwardPayload?: Cell,
-        forwardAmount?: bigint
+        forwardAmount?: bigint,
     ) {
         await provider.internal(via, {
             value,

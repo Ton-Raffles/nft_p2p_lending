@@ -1,0 +1,101 @@
+() send_jettons(slice jetton_wallet, int value, int amount, slice user) impure inline {
+    if (value <= 0) {
+        return ();
+    }
+
+    send_raw_message(begin_cell()
+        .store_uint(0x18, 6)
+        .store_slice(jetton_wallet)
+        .store_coins(value)
+        .store_uint(0, 107)
+        .store_uint(op::jetton::transfer, 32)
+        .store_uint(context::query_id, 64)
+        .store_coins(amount)
+        .store_slice(user)
+        .store_uint(0, 8)
+    .end_cell(), 1);
+}
+
+() send_process_accept(slice to, int value, int query_id) impure inline {
+    send_raw_message(begin_cell()
+        .store_uint(0x18, 6)
+        .store_slice(to)
+        .store_coins(value)
+        .store_uint(0, 107)
+        .store_uint(op::process_accept, 32)
+        .store_uint(query_id, 64)
+    .end_cell(), 1);
+}
+
+() send_return_nft(slice to, int value, int query_id) impure inline {
+    send_raw_message(begin_cell()
+        .store_uint(0x18, 6)
+        .store_slice(to)
+        .store_coins(value)
+        .store_uint(0, 107)
+        .store_uint(op::return_nft, 32)
+        .store_uint(query_id, 64)
+    .end_cell(), 1);
+}
+
+() send_destroy(slice to) impure inline {
+    send_raw_message(begin_cell()
+        .store_uint(0x18, 6)
+        .store_slice(to)
+        .store_coins(0)
+        .store_uint(0, 107)
+    .end_cell(), 128 + 32);
+}
+
+() send_give_away_nft(slice to, int query_id, slice owner) impure inline {
+    send_raw_message(begin_cell()
+        .store_uint(0x18, 6)
+        .store_slice(to)
+        .store_coins(get_compute_fee(0, const::fee_const))
+        .store_uint(0, 107)
+        .store_uint(op::give_away_nft, 32)
+        .store_uint(query_id, 64)
+        .store_slice(owner)
+    .end_cell(), 1);
+}
+
+() send_process_cancellation(slice to, int query_id) impure inline {
+    send_raw_message(begin_cell()
+        .store_uint(0x18, 6)
+        .store_slice(to)
+        .store_coins(get_compute_fee(0, const::fee_const_min))
+        .store_uint(0, 107)
+        .store_uint(op::process_cancellation, 32)
+        .store_uint(query_id, 64)
+    .end_cell(), 1); 
+}
+
+() send_offer(slice to) impure inline {
+    send_raw_message(begin_cell()
+        .store_uint(0x18, 6)
+        .store_slice(to)
+        .store_coins(0)
+        .store_uint(0, 1 + 4 + 4 + 64 + 32 + 1 + 1 + 32)
+        .store_slice("Offer")
+    .end_cell(), 64);
+}
+
+() send_accept(slice to) impure inline {
+    send_raw_message(begin_cell()
+        .store_uint(0x18, 6)
+        .store_slice(to)
+        .store_coins(0)
+        .store_uint(0, 1 + 4 + 4 + 64 + 32 + 1 + 1 + 32)
+        .store_slice("Accept")
+    .end_cell(), 64);
+}
+
+() send_reject(slice to) impure inline {
+    send_raw_message(begin_cell()
+        .store_uint(0x18, 6)
+        .store_slice(to)
+        .store_coins(0)
+        .store_uint(0, 1 + 4 + 4 + 64 + 32 + 1 + 1 + 32)
+        .store_slice("Reject")
+    .end_cell(), 64);
+}
