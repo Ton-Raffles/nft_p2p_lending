@@ -14,6 +14,8 @@ global int data::offer::apr_amount;
 global int data::offer::extra_reward;
 global slice data::offer::turn;
 
+global int const::fee_for_transfer_jettons;
+
 global int context::op;
 global int context::query_id;
 global slice context::sender;
@@ -38,6 +40,8 @@ global slice context::sender;
     data::offer::apr_amount = offer~load_coins();
     data::offer::extra_reward = offer~load_coins();
     data::offer::turn = offer~load_msg_addr();
+
+    const::fee_for_transfer_jettons = 2 * 15000000 + 10000000 + get_compute_fee(0, const::fee_const_min);
 }
 
 () save_data() impure {

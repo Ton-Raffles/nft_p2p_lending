@@ -11,6 +11,8 @@ global cell data::helper_code;
 global slice data::platform;
 global int data::nft_fee;
 
+global int const::fee_for_transfer_jettons;
+
 global int context::op;
 global int context::query_id;
 global slice context::sender;
@@ -30,6 +32,8 @@ global slice context::sender;
     data::helper_code = dv~load_ref();
     data::platform = dv~load_msg_addr();
     data::nft_fee = dv~load_coins();
+
+    const::fee_for_transfer_jettons = 2 * 15000000 + 10000000 + get_compute_fee(0, const::fee_const_min);
 }
 
 () save_data() impure {

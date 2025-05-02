@@ -1,6 +1,6 @@
 #include "imports/stdlib.fc";
-#include "helper_storage.fc";
 #include "constants.fc";
+#include "helper_storage.fc";
 #include "helper_messages.fc";
 
 () recv_internal(int my_balance, int msg_value, cell in_msg_full, slice in_msg_body) impure {
@@ -42,18 +42,53 @@
         throw_unless(error::not_correct_value, data::amount >= amount);
 
         send_jettons(data::jetton_wallet, msg_value - get_compute_fee(0, const::fee_const_min), data::amount - amount, data::owner);
+        data::amount = amount;
     }
 
     elseif (context::op == op::accept) {
         throw_unless(error::wrong_sender, equal_slices(context::sender, data::master_owner));
         throw_unless(error::offer_alredy_accepted, data::accepted == 0);
-        throw_unless(error::not_enough_value, msg_value >= get_compute_fee(0, const::fee_const * 2));
+        throw_unless(error::not_enough_value, msg_value >= get_compute_fee(0, const::fee_const * 2) + const::fee_for_transfer_jettons);
 
         send_process_accept(data::master, get_compute_fee(0, const::fee_const), context::query_id);
 
-        send_jettons(data::jetton_wallet, 50000000, data::amount, data::master_owner);
+        if (equal_slices(data::jetton_wallet, const::ton_key)) {
+            accept_message();
+            send_return_fees_const(data::master_owner, data::amount);
+        } else {
+            send_jettons(data::jetton_wallet, const::fee_for_transfer_jettons, data::amount, data::master_owner);
+        }
         
         data::accepted = now();
+    }
+
+    elseif (context::op == op::change_amount_helper) {
+        throw_unless(error::wrong_asset, equal_slices(const::ton_key, data::jetton_wallet));
+        throw_unless(error::offer_alredy_accepted, data::accepted == 0);
+        data::amount += msg_value - get_compute_fee(0, const::fee_const_min);
+    }
+
+    elseif (context::op == op::pay_loan) {
+        throw_unless(error::wrong_asset, equal_slices(const::ton_key, data::jetton_wallet));
+        throw_unless(error::offer_not_accepted, data::accepted != 0);
+        throw_unless(error::not_enough_value, msg_value >= get_compute_fee(0, const::fee_const * 2));
+        data::paid_amount += msg_value - get_compute_fee(0, const::fee_const_min + const::fee_const);
+
+        if (data::paid_amount >= data::amount + data::apr_amount) {
+            send_return_nft(data::master, get_compute_fee(0, const::fee_const), context::query_id);
+
+            if (data::paid_amount >= data::amount + data::apr_amount) {
+                if (data::paid_amount - get_compute_fee(0, const::fee_const_min) > data::amount + data::apr_amount) {
+                    send_return_fees_const(data::master_owner, data::paid_amount - (data::amount + data::apr_amount));
+                }
+
+                send_return_fees_const(data::owner, data::amount + (data::apr_amount * 9 / 10));
+
+                send_return_fees_const(data::platform, data::apr_amount / 10);
+
+                send_destroy(data::owner);
+            }
+        }
     }
 
     elseif (context::op == op::jetton::transfer_notification) {
@@ -63,6 +98,11 @@
         slice forward_payload = in_msg_body;
         if (forward_payload~load_int(1)) {
             forward_payload = forward_payload~load_ref().begin_parse();
+        }
+
+        ifnot (equal_slices(context::sender, data::jetton_wallet)) {
+            send_jettons(context::sender, msg_value - get_compute_fee(0, const::fee_const_min), amount, user);
+            return ();
         }
         
         if (now() - data::accepted > data::loan_duration) {
@@ -83,23 +123,26 @@
         }
 
         else {
-            ifnot (equal_slices(context::sender, data::jetton_wallet)) {
-                send_jettons(context::sender, msg_value - get_compute_fee(0, const::fee_const_min), amount, user);
-                return ();
-            }
-
-            elseif (data::accepted != 0) {
+            if (data::accepted != 0) {
                 data::paid_amount += amount;
 
                 if (data::paid_amount >= data::amount + data::apr_amount) {
                     send_return_nft(data::master, get_compute_fee(0, const::fee_const), context::query_id);
 
-                    send_jettons(data::jetton_wallet, 50000000, data::amount + (data::apr_amount * 9 / 10), data::owner);
+                    if (data::paid_amount > data::amount + data::apr_amount) {
+                        send_jettons(data::jetton_wallet, const::fee_for_transfer_jettons, data::paid_amount - (data::amount + data::apr_amount), data::master_owner);
+                    }
 
-                    send_jettons(data::jetton_wallet, 50000000, data::apr_amount / 10, data::platform);
+                    send_jettons(data::jetton_wallet, const::fee_for_transfer_jettons, data::amount + (data::apr_amount * 9 / 10), data::owner);
+
+                    send_jettons(data::jetton_wallet, const::fee_for_transfer_jettons, data::apr_amount / 10, data::platform);
 
                     send_destroy(data::owner);
                 }
+            }
+
+            else {
+                send_jettons(data::jetton_wallet, const::fee_for_transfer_jettons, amount, data::owner);
             }
         }
     }
@@ -109,7 +152,7 @@
         if (now() + data::accepted > data::loan_duration) {
             send_give_away_nft(data::master, context::query_id, data::owner);
 
-            send_jettons(data::jetton_wallet, 50000000, data::paid_amount, data::master_owner);
+            send_jettons(data::jetton_wallet, const::fee_for_transfer_jettons, data::paid_amount, data::master_owner);
 
             send_destroy(data::owner);
         }

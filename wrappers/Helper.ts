@@ -20,14 +20,14 @@ export function helperConfigToCell(config: HelperConfig): Cell {
                 .storeAddress(config.jettonWallet)
                 .storeAddress(config.ownerJettonWallet)
                 .storeCoins(0)
-                .endCell()
+                .endCell(),
         )
         .storeRef(
             beginCell()
                 .storeAddress(config.owner)
                 .storeAddress(config.masterOwner)
                 .storeAddress(config.platform)
-                .endCell()
+                .endCell(),
         )
         .storeCoins(config.amount)
         .storeUint(config.loanDuration, 64)
@@ -37,7 +37,10 @@ export function helperConfigToCell(config: HelperConfig): Cell {
 }
 
 export class Helper implements Contract {
-    constructor(readonly address: Address, readonly init?: { code: Cell; data: Cell }) {}
+    constructor(
+        readonly address: Address,
+        readonly init?: { code: Cell; data: Cell },
+    ) {}
 
     static createFromAddress(address: Address) {
         return new Helper(address);
@@ -63,7 +66,7 @@ export class Helper implements Contract {
         value: bigint,
         opts: {
             queryId: bigint;
-        }
+        },
     ) {
         await provider.internal(via, {
             value,
@@ -78,7 +81,7 @@ export class Helper implements Contract {
         value: bigint,
         opts: {
             queryId: bigint;
-        }
+        },
     ) {
         await provider.internal(via, {
             value,
@@ -95,7 +98,7 @@ export class Helper implements Contract {
             queryId: bigint;
             loanDuration?: bigint;
             aprAmount?: bigint;
-        }
+        },
     ) {
         await provider.internal(via, {
             value,
@@ -115,7 +118,7 @@ export class Helper implements Contract {
         value: bigint,
         opts: {
             queryId: bigint;
-        }
+        },
     ) {
         await provider.internal(via, {
             value,
@@ -131,7 +134,7 @@ export class Helper implements Contract {
         opts: {
             queryId: bigint;
             amount: bigint;
-        }
+        },
     ) {
         await provider.internal(via, {
             value,
@@ -149,7 +152,7 @@ export class Helper implements Contract {
             loanDuration: bigint;
             aprAmount: bigint;
             extraReward: bigint;
-        }
+        },
     ) {
         await provider.internal(via, {
             value,
@@ -171,12 +174,20 @@ export class Helper implements Contract {
         opts: {
             queryId: bigint;
             flag: bigint;
-        }
+        },
     ) {
         await provider.internal(via, {
             value,
             sendMode: SendMode.PAY_GAS_SEPARATELY,
             body: beginCell().storeUint(0x648fa1a7, 32).storeUint(opts.queryId, 64).storeUint(opts.flag, 1).endCell(),
+        });
+    }
+
+    async sendPayLoan(provider: ContractProvider, via: Sender, value: bigint, opts: { queryId: bigint }) {
+        await provider.internal(via, {
+            value,
+            sendMode: SendMode.PAY_GAS_SEPARATELY,
+            body: beginCell().storeUint(0x5a7cab79, 32).storeUint(opts.queryId, 64).endCell(),
         });
     }
 

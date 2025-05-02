@@ -1,5 +1,5 @@
 import { Blockchain, SandboxContract, TreasuryContract, printTransactionFees } from '@ton/sandbox';
-import { Cell, Dictionary, beginCell, toNano } from '@ton/core';
+import { Address, Cell, Dictionary, beginCell, toNano } from '@ton/core';
 import { Master } from '../wrappers/Master';
 import { Helper } from '../wrappers/Helper';
 import '@ton/test-utils';
@@ -232,7 +232,7 @@ describe('Master', () => {
         res = await usersJettonWallet[2].sendTransfer(
             users[2].getSender(),
             toNano('0.05'),
-            toNano('0.15'),
+            toNano('0.25'),
             master.address,
             toNano('1000'),
 
@@ -351,7 +351,7 @@ describe('Master', () => {
         res = await usersJettonWallet[2].sendTransfer(
             users[2].getSender(),
             toNano('0.05'),
-            toNano('0.15'),
+            toNano('0.25'),
             master.address,
             toNano('900'),
             beginCell()
@@ -399,9 +399,9 @@ describe('Master', () => {
         res = await usersJettonWallet[2].sendTransfer(
             users[2].getSender(),
             toNano('0.05'),
-            toNano('0.15'),
+            toNano('0.25'),
             master.address,
-            toNano('1000'),
+            toNano('900'),
             beginCell()
                 .storeUint(0x2c504e2d, 32)
                 .storeAddress(users[2].address)
@@ -445,7 +445,7 @@ describe('Master', () => {
         res = await usersJettonWallet[2].sendTransfer(
             users[2].getSender(),
             toNano('0.05'),
-            toNano('0.15'),
+            toNano('0.25'),
             master.address,
             toNano('1000'),
             beginCell()
@@ -470,7 +470,7 @@ describe('Master', () => {
         ).not.toEqual('active');
     });
 
-    it('should not deploy offer (big apr amount)', async () => {
+    it('should not deploy offer (small apr amount)', async () => {
         const item = blockchain.openContract(await collection.getNftItemByIndex(0n));
 
         let masterData = await master.getContractData();
@@ -491,7 +491,7 @@ describe('Master', () => {
         res = await usersJettonWallet[2].sendTransfer(
             users[2].getSender(),
             toNano('0.05'),
-            toNano('0.15'),
+            toNano('0.25'),
             master.address,
             toNano('1000'),
             beginCell()
@@ -503,9 +503,7 @@ describe('Master', () => {
                     ),
                 )
                 .storeAddress(usersJettonWallet[2].address)
-                .storeRef(
-                    beginCell().storeCoins(toNano('1000')).storeCoins(toNano('1000')).storeUint(100n, 64).endCell(),
-                )
+                .storeRef(beginCell().storeCoins(toNano('1000')).storeCoins(toNano('1')).storeUint(100n, 64).endCell())
                 .endCell(),
         );
 
@@ -537,7 +535,7 @@ describe('Master', () => {
         let res = await usersJettonWallet[2].sendTransfer(
             users[2].getSender(),
             toNano('0.05'),
-            toNano('0.15'),
+            toNano('0.25'),
             master.address,
             toNano('1000'),
             beginCell()
@@ -585,7 +583,7 @@ describe('Master', () => {
         res = await usersJettonWallet[2].sendTransfer(
             users[2].getSender(),
             toNano('0.05'),
-            toNano('0.15'),
+            toNano('0.25'),
             master.address,
             toNano('1000'),
             beginCell()
@@ -667,7 +665,7 @@ describe('Master', () => {
         res = await usersJettonWallet[2].sendTransfer(
             users[2].getSender(),
             toNano('0.05'),
-            toNano('0.15'),
+            toNano('0.25'),
             master.address,
             toNano('1000'),
             beginCell()
@@ -730,7 +728,7 @@ describe('Master', () => {
         res = await usersJettonWallet[2].sendTransfer(
             users[2].getSender(),
             toNano('0.05'),
-            toNano('0.15'),
+            toNano('0.25'),
             master.address,
             toNano('1000'),
             beginCell()
@@ -778,7 +776,7 @@ describe('Master', () => {
         res = await usersJettonWallet[2].sendTransfer(
             users[2].getSender(),
             toNano('0.05'),
-            toNano('0.15'),
+            toNano('0.25'),
             master.address,
             toNano('1000'),
             beginCell()
@@ -864,7 +862,7 @@ describe('Master', () => {
         res = await usersJettonWallet[2].sendTransfer(
             users[2].getSender(),
             toNano('0.05'),
-            toNano('0.15'),
+            toNano('0.25'),
             master.address,
             toNano('1000'),
             beginCell()
@@ -950,7 +948,7 @@ describe('Master', () => {
         res = await usersJettonWallet[2].sendTransfer(
             users[2].getSender(),
             toNano('0.05'),
-            toNano('0.15'),
+            toNano('0.25'),
             master.address,
             toNano('1000'),
             beginCell()
@@ -1040,7 +1038,7 @@ describe('Master', () => {
         res = await usersJettonWallet[2].sendTransfer(
             users[2].getSender(),
             toNano('0.05'),
-            toNano('0.15'),
+            toNano('0.25'),
             master.address,
             toNano('1000'),
             beginCell()
@@ -1107,7 +1105,7 @@ describe('Master', () => {
         res = await usersJettonWallet[2].sendTransfer(
             users[2].getSender(),
             toNano('0.05'),
-            toNano('0.15'),
+            toNano('0.25'),
             master.address,
             toNano('1000'),
             beginCell()
@@ -1197,7 +1195,7 @@ describe('Master', () => {
         res = await usersJettonWallet[2].sendTransfer(
             users[2].getSender(),
             toNano('0.05'),
-            toNano('0.15'),
+            toNano('0.25'),
             master.address,
             toNano('1000'),
             beginCell()
@@ -1289,7 +1287,7 @@ describe('Master', () => {
         res = await usersJettonWallet[2].sendTransfer(
             users[2].getSender(),
             toNano('0.05'),
-            toNano('0.15'),
+            toNano('0.25'),
             master.address,
             toNano('1000'),
             beginCell()
@@ -1364,6 +1362,109 @@ describe('Master', () => {
         expect((await blockchain.getContract(helper.address)).accountState?.type).not.toEqual('active');
     });
 
+    it('should pay out ton', async () => {
+        const item = blockchain.openContract(await collection.getNftItemByIndex(0n));
+
+        let masterData = await master.getContractData();
+        expect(masterData.active).toEqual(0n);
+
+        let res = await item.sendTransfer(users[0].getSender(), toNano('1'), master.address);
+
+        masterData = await master.getContractData();
+        expect(masterData.active).toEqual(1n);
+        expect(masterData.nft).toEqualAddress(item.address);
+        expect(masterData.owner).toEqualAddress(users[0].address);
+        expect(masterData.jettonWallet).toEqualAddress(await jettonMinter.getWalletAddressOf(master.address));
+        expect(masterData.loanDuration).toEqual(100n);
+        expect(masterData.amount).toEqual(toNano('1000'));
+        expect(masterData.aprAmount).toEqual(toNano('100'));
+        expect(masterData.platform).toEqualAddress(users[3].address);
+
+        res = await master.sendChangeData(users[0].getSender(), toNano('0.05'), {
+            queryId: 0n,
+            jettonWallet: Address.parse('UQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAJKZ'),
+            amount: toNano('10'),
+            aprAmount: toNano('1'),
+        });
+
+        masterData = await master.getContractData();
+
+        expect(masterData.active).toEqual(1n);
+        expect(masterData.nft).toEqualAddress(item.address);
+        expect(masterData.owner).toEqualAddress(users[0].address);
+        expect(masterData.jettonWallet).toEqualAddress(
+            Address.parse('UQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAJKZ'),
+        );
+        expect(masterData.loanDuration).toEqual(100n);
+        expect(masterData.amount).toEqual(toNano('10'));
+        expect(masterData.aprAmount).toEqual(toNano('1'));
+        expect(masterData.platform).toEqualAddress(users[3].address);
+
+        res = await master.sendMakeOffer(users[2].getSender(), toNano('11'), {
+            queryId: 0n,
+            owner: users[2].address,
+            offerAmount: toNano('10'),
+            aprAmount: toNano('1'),
+            loanDuration: 100n,
+        });
+
+        let helper = blockchain.openContract(
+            Helper.createFromAddress(
+                (
+                    await master.getHelper(
+                        Address.parse('UQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAJKZ'),
+                        users[2].address,
+                    )
+                ).address,
+            ),
+        );
+
+        let helperData = await helper.getContractData();
+        expect(helperData.master).toEqualAddress(master.address);
+        expect(helperData.owner).toEqualAddress(users[2].address);
+        expect(helperData.jettonWallet).toEqualAddress(
+            Address.parse('UQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAJKZ'),
+        );
+        expect(helperData.ownerJettonWallet).toEqualAddress(
+            Address.parse('UQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAJKZ'),
+        );
+        expect(helperData.paidAmount).toEqual(0n);
+        expect(helperData.amount).toEqual(toNano('10'));
+        expect(helperData.aprAmount).toEqual(toNano('1'));
+        expect(helperData.platform).toEqualAddress(users[3].address);
+        expect(helperData.loanDuration).toEqual(100n);
+        expect(helperData.accepted).toEqual(0n);
+        expect(helperData.masterOwner).toEqualAddress(users[0].address);
+
+        res = await helper.sendAccept(users[0].getSender(), toNano('0.10'), {
+            queryId: 0n,
+        });
+
+        helperData = await helper.getContractData();
+        expect(helperData.master).toEqualAddress(master.address);
+        expect(helperData.owner).toEqualAddress(users[2].address);
+        expect(helperData.jettonWallet).toEqualAddress(
+            Address.parse('UQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAJKZ'),
+        );
+        expect(helperData.ownerJettonWallet).toEqualAddress(
+            Address.parse('UQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAJKZ'),
+        );
+        expect(helperData.paidAmount).toEqual(0n);
+        expect(helperData.amount).toEqual(toNano('10'));
+        expect(helperData.aprAmount).toEqual(toNano('1'));
+        expect(helperData.platform).toEqualAddress(users[3].address);
+        expect(helperData.loanDuration).toEqual(100n);
+        expect(helperData.accepted).toEqual(1600000000n);
+        expect(helperData.masterOwner).toEqualAddress(users[0].address);
+
+        res = await helper.sendPayLoan(users[0].getSender(), toNano('11.5'), {
+            queryId: 0n,
+        });
+
+        expect(await item.getOwner()).toEqualAddress(users[0].address);
+        expect((await blockchain.getContract(helper.address)).accountState?.type).not.toEqual('active');
+    });
+
     it('should not pay out', async () => {
         const item = blockchain.openContract(await collection.getNftItemByIndex(0n));
 
@@ -1387,7 +1488,7 @@ describe('Master', () => {
         res = await usersJettonWallet[2].sendTransfer(
             users[2].getSender(),
             toNano('0.05'),
-            toNano('0.15'),
+            toNano('0.25'),
             master.address,
             toNano('1000'),
             beginCell()
@@ -1449,7 +1550,7 @@ describe('Master', () => {
 
         blockchain.now = 1600000000 + 101;
 
-        res = await helper.sendCheck(users[2].getSender(), toNano('0.15'), {
+        res = await helper.sendCheck(users[2].getSender(), toNano('0.25'), {
             queryId: 0n,
         });
 
@@ -1479,7 +1580,7 @@ describe('Master', () => {
         res = await usersJettonWallet[2].sendTransfer(
             users[2].getSender(),
             toNano('0.05'),
-            toNano('0.15'),
+            toNano('0.25'),
             master.address,
             toNano('1000'),
             beginCell()
@@ -1589,7 +1690,7 @@ describe('Master', () => {
         res = await usersJettonWallet[2].sendTransfer(
             users[2].getSender(),
             toNano('0.05'),
-            toNano('0.15'),
+            toNano('0.25'),
             master.address,
             toNano('1000'),
             beginCell()
@@ -1727,7 +1828,7 @@ describe('Master', () => {
         res = await usersJettonWallet[2].sendTransfer(
             users[2].getSender(),
             toNano('0.05'),
-            toNano('0.15'),
+            toNano('0.25'),
             master.address,
             toNano('1000'),
             beginCell()
@@ -1869,7 +1970,7 @@ describe('Master', () => {
         res = await usersJettonWallet[2].sendTransfer(
             users[2].getSender(),
             toNano('0.05'),
-            toNano('0.15'),
+            toNano('0.25'),
             master.address,
             toNano('1000'),
             beginCell()
@@ -2005,7 +2106,7 @@ describe('Master', () => {
         res = await usersJettonWallet[2].sendTransfer(
             users[2].getSender(),
             toNano('0.05'),
-            toNano('0.15'),
+            toNano('0.25'),
             master.address,
             toNano('1000'),
             beginCell()
@@ -2141,7 +2242,7 @@ describe('Master', () => {
         res = await usersJettonWallet[2].sendTransfer(
             users[2].getSender(),
             toNano('0.05'),
-            toNano('0.15'),
+            toNano('0.25'),
             master.address,
             toNano('1000'),
             beginCell()

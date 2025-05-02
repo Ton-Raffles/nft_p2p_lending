@@ -110,6 +110,26 @@ export class Master implements Contract {
         });
     }
 
+    async sendMakeOffer(
+        provider: ContractProvider,
+        via: Sender,
+        value: bigint,
+        opts: { queryId: bigint; owner: Address; offerAmount: bigint; aprAmount: bigint; loanDuration: bigint },
+    ) {
+        await provider.internal(via, {
+            value,
+            sendMode: SendMode.PAY_GAS_SEPARATELY,
+            body: beginCell()
+                .storeUint(0x2c504e2d, 32)
+                .storeUint(opts.queryId, 64)
+                .storeAddress(opts.owner)
+                .storeCoins(opts.offerAmount)
+                .storeCoins(opts.aprAmount)
+                .storeUint(opts.loanDuration, 64)
+                .endCell(),
+        });
+    }
+
     async getContractData(provider: ContractProvider): Promise<{
         owner: Address;
         nft: Address;

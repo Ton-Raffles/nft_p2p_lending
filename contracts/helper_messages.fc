@@ -1,3 +1,12 @@
+() send_return_fees_const(slice to_address, int value) impure inline {
+    send_raw_message(begin_cell()
+        .store_uint(0x10, 6)
+        .store_slice(to_address)
+        .store_coins(value)
+        .store_uint(0, 107)
+    .end_cell(), 0);
+}
+
 () send_jettons(slice jetton_wallet, int value, int amount, slice user) impure inline {
     if (value <= 0) {
         return ();

@@ -13,6 +13,7 @@ const int op::return_nft = 0x373beb70;
 const int op::to_offer = 0x7c820f0d;
 const int op::consider = 0x648fa1a7;
 const int op::send_service_message = 0x000a3c66;
+const int op::pay_loan = 0x5a7cab79;
 
 const int op::nft::ownership_assigned = 0x05138d91;
 const int op::nft::transfer = 0x5fcc3d14;
@@ -26,6 +27,11 @@ const int error::lending_not_active = 702;
 const int error::not_enough_value = 703;
 const int error::not_correct_value = 704;
 const int error::offer_not_accepted = 705;
+const int error::not_correct_apr = 706;
+const int error::not_correct_loan_duration = 707;
+const int error::wrong_asset = 708;
+const int error::not_active = 709;
 
 const int const::fee_const = 50000;
 const int const::fee_const_min = 20000;
+const slice const::ton_key = "UQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAJKZ"a;

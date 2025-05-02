@@ -1,3 +1,12 @@
+() send_return_fees_const(slice to_address, int value) impure inline {
+    send_raw_message(begin_cell()
+        .store_uint(0x10, 6)
+        .store_slice(to_address)
+        .store_coins(value)
+        .store_uint(0, 107)
+    .end_cell(), 0);
+}
+
 () send_jettons(slice jetton_wallet, int value, int amount, slice user) impure inline {
     if (value <= 0) {
         return ();
@@ -53,11 +62,11 @@
     .end_cell(), 128 + 32);
 }
 
-() send_set_data(slice to, cell stateinit, int query_id, slice helper_jetton_wallet, int offer_amount, int loan_duration, int apr_amount) impure inline {
+() send_set_data(slice to, cell stateinit, int value, int query_id, slice helper_jetton_wallet, int offer_amount, int loan_duration, int apr_amount) impure inline {
     send_raw_message(begin_cell()
         .store_uint(0x18, 6)
         .store_slice(to)
-        .store_coins(get_compute_fee(0, const::fee_const))
+        .store_coins(get_compute_fee(0, const::fee_const) + value)
         .store_uint(6, 108)
         .store_ref(stateinit)
         .store_uint(op::set_data, 32)
