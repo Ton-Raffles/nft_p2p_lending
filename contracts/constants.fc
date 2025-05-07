@@ -34,4 +34,5 @@ const int error::not_active = 709;
 
 const int const::fee_const = 50000;
 const int const::fee_const_min = 20000;
+const int const::e9 = 1000000000;
 const slice const::ton_key = "UQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAJKZ"a;

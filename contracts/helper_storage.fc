@@ -13,6 +13,7 @@ global int data::offer::loan_duration;
 global int data::offer::apr_amount;
 global int data::offer::extra_reward;
 global slice data::offer::turn;
+global int data::platform_fee;
 
 global int const::fee_for_transfer_jettons;
 
@@ -40,6 +41,7 @@ global slice context::sender;
     data::offer::apr_amount = offer~load_coins();
     data::offer::extra_reward = offer~load_coins();
     data::offer::turn = offer~load_msg_addr();
+    data::platform_fee = offer~load_uint(64);
 
     const::fee_for_transfer_jettons = 2 * 15000000 + 10000000 + get_compute_fee(0, const::fee_const_min);
 }
@@ -66,6 +68,7 @@ global slice context::sender;
             .store_coins(data::offer::apr_amount)
             .store_coins(data::offer::extra_reward)
             .store_slice(data::offer::turn)
+            .store_uint(data::platform_fee, 64)
         .end_cell())
     .end_cell());
 }

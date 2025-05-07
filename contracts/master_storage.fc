@@ -10,6 +10,7 @@ global int data::apr_amount;
 global cell data::helper_code;
 global slice data::platform;
 global int data::nft_fee;
+global int data::platform_fee;
 
 global int const::fee_for_transfer_jettons;
 
@@ -32,7 +33,7 @@ global slice context::sender;
     data::helper_code = dv~load_ref();
     data::platform = dv~load_msg_addr();
     data::nft_fee = dv~load_coins();
-
+    data::platform_fee = dv~load_uint(64);
     const::fee_for_transfer_jettons = 2 * 15000000 + 10000000 + get_compute_fee(0, const::fee_const_min);
 }
 
@@ -51,6 +52,7 @@ global slice context::sender;
             .store_ref(data::helper_code)
             .store_slice(data::platform)
             .store_coins(data::nft_fee)
+            .store_uint(data::platform_fee, 64)
             .end_cell())
     .end_cell());
 }
@@ -80,6 +82,7 @@ global slice context::sender;
                 .store_coins(0)
                 .store_coins(0)
                 .store_slice(my_address())
+                .store_uint(0, 64)
             .end_cell())
         .end_cell())
         .store_uint(0, 1)

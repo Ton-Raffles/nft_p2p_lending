@@ -108,6 +108,7 @@ describe('Master', () => {
                     helperCode: codeHelper,
                     platform: users[3].address,
                     nftFee: toNano('0.03'),
+                    platformFee: toNano('0.1'),
                 },
                 codeMaster,
             ),

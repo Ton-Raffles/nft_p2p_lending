@@ -22,6 +22,7 @@ export type MasterConfig = {
     helperCode: Cell;
     platform: Address;
     nftFee: bigint;
+    platformFee: bigint;
 };
 
 export function masterConfigToCell(config: MasterConfig): Cell {
@@ -40,6 +41,7 @@ export function masterConfigToCell(config: MasterConfig): Cell {
                 .storeRef(config.helperCode)
                 .storeAddress(config.platform)
                 .storeCoins(config.nftFee)
+                .storeUint(config.platformFee, 64)
                 .endCell(),
         )
         .endCell();
@@ -142,6 +144,7 @@ export class Master implements Contract {
         aprAmount: bigint;
         helperCode: Cell;
         platform: Address;
+        platformFee: bigint;
     }> {
         const res = (await provider.get('get_contract_data', [])).stack;
         return {
@@ -161,6 +164,7 @@ export class Master implements Contract {
             aprAmount: res.readBigNumber(),
             helperCode: res.readCell(),
             platform: res.readAddress(),
+            platformFee: res.readBigNumber(),
         };
     }
 

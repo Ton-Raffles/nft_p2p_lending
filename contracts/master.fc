@@ -234,9 +234,9 @@
     save_data();
 }
 
-(slice, slice, slice, int, int, cell, int, int, int, cell, slice) get_contract_data() method_id {
+(slice, slice, slice, int, int, cell, int, int, int, cell, slice, int) get_contract_data() method_id {
     load_data();
-    return (data::owner, data::nft, data::jetton_wallet, data::active, data::offer_accept, data::offers, data::amount, data::loan_duration, data::apr_amount, data::helper_code, data::platform);
+    return (data::owner, data::nft, data::jetton_wallet, data::active, data::offer_accept, data::offers, data::amount, data::loan_duration, data::apr_amount, data::helper_code, data::platform, data::platform_fee);
 }
 
 (slice) get_helper_address(slice owner_jetton_wallet, slice user) method_id {

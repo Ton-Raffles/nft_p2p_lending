@@ -18,9 +18,11 @@
         throw_unless(error::wrong_sender, equal_slices(context::sender, data::master));
         
         data::jetton_wallet = in_msg_body~load_msg_addr();
+        in_msg_body = in_msg_body~load_ref().begin_parse();
         data::amount = in_msg_body~load_coins();
         data::loan_duration = in_msg_body~load_uint(64);
         data::apr_amount = in_msg_body~load_coins();
+        data::platform_fee = in_msg_body~load_uint(64);
     }
 
     elseif (context::op == op::change_data_helper) {
@@ -82,9 +84,11 @@
                     send_return_fees_const(data::master_owner, data::paid_amount - (data::amount + data::apr_amount));
                 }
 
-                send_return_fees_const(data::owner, data::amount + (data::apr_amount * 9 / 10));
+                int platform_fee = data::apr_amount * data::platform_fee / const::e9;
 
-                send_return_fees_const(data::platform, data::apr_amount / 10);
+                send_return_fees_const(data::owner, data::amount + data::apr_amount - platform_fee);
+
+                send_return_fees_const(data::platform, platform_fee);
 
                 send_destroy(data::owner);
             }
@@ -133,9 +137,11 @@
                         send_jettons(data::jetton_wallet, const::fee_for_transfer_jettons, data::paid_amount - (data::amount + data::apr_amount), data::master_owner);
                     }
 
-                    send_jettons(data::jetton_wallet, const::fee_for_transfer_jettons, data::amount + (data::apr_amount * 9 / 10), data::owner);
+                    int platform_fee = data::apr_amount * data::platform_fee / const::e9;
 
-                    send_jettons(data::jetton_wallet, const::fee_for_transfer_jettons, data::apr_amount / 10, data::platform);
+                    send_jettons(data::jetton_wallet, const::fee_for_transfer_jettons, data::amount + data::apr_amount - platform_fee, data::owner);
+
+                    send_jettons(data::jetton_wallet, const::fee_for_transfer_jettons, platform_fee, data::platform);
 
                     send_destroy(data::owner);
                 }
@@ -236,8 +242,8 @@
     save_data();
 }
 
-(slice, slice, slice, int, slice, slice, slice, int, int, int, int, int, int, int, slice) get_contract_data() method_id {
+(slice, slice, slice, int, slice, slice, slice, int, int, int, int, int, int, int, slice, int) get_contract_data() method_id {
     load_data();
 
-    return (data::master, data::jetton_wallet, data::owner_jetton_wallet, data::paid_amount, data::owner, data::master_owner, data::platform, data::amount, data::loan_duration, data::apr_amount, data::accepted, data::offer::loan_duration, data::offer::apr_amount, data::offer::extra_reward, data::offer::turn);
+    return (data::master, data::jetton_wallet, data::owner_jetton_wallet, data::paid_amount, data::owner, data::master_owner, data::platform, data::amount, data::loan_duration, data::apr_amount, data::accepted, data::offer::loan_duration, data::offer::apr_amount, data::offer::extra_reward, data::offer::turn, data::platform_fee);
 }
