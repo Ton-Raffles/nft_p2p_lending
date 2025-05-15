@@ -35,6 +35,8 @@
             (key, val, flag) = data::offers.dict_get_next?(267, key);
         }
 
+        send_nft(data::nft, data::nft_fee, context::query_id, data::owner);
+
         send_destroy(data::owner);
     }
 
