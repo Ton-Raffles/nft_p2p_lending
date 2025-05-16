@@ -208,8 +208,6 @@ describe('Master', () => {
         await master.sendCencel(users[0].getSender(), toNano('0.05'), {
             queryId: 0n,
         });
-
-        expect((await blockchain.getContract(master.address)).accountState?.type).not.toEqual('active');
     });
 
     it('should deploy offer', async () => {
@@ -1081,8 +1079,6 @@ describe('Master', () => {
         await helper.sendCencel(users[2].getSender(), toNano('0.05'), {
             queryId: 0n,
         });
-
-        expect((await blockchain.getContract(helper.address)).accountState?.type).not.toEqual('active');
     });
 
     it('should not delete offer (offer accepted)', async () => {
@@ -1360,7 +1356,6 @@ describe('Master', () => {
         expect(await usersJettonWallet[3].getJettonBalance()).toEqual(toNano('10'));
         expect(await item.getOwner()).toEqualAddress(users[0].address);
         expect(await usersJettonWallet[2].getJettonBalance()).toEqual(toNano('90') + balance);
-        expect((await blockchain.getContract(helper.address)).accountState?.type).not.toEqual('active');
     });
 
     it('should pay out ton', async () => {
@@ -1463,7 +1458,6 @@ describe('Master', () => {
         });
 
         expect(await item.getOwner()).toEqualAddress(users[0].address);
-        expect((await blockchain.getContract(helper.address)).accountState?.type).not.toEqual('active');
     });
 
     it('should not pay out', async () => {
@@ -1556,8 +1550,6 @@ describe('Master', () => {
         });
 
         expect(await item.getOwner()).toEqualAddress(users[2].address);
-        expect((await blockchain.getContract(helper.address)).accountState?.type).not.toEqual('active');
-        expect((await blockchain.getContract(master.address)).accountState?.type).not.toEqual('active');
     });
 
     it('should offer new settings', async () => {

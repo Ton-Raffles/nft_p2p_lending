@@ -53,7 +53,7 @@
         .store_slice(to)
         .store_coins(0)
         .store_uint(0, 107)
-    .end_cell(), 128 + 32);
+    .end_cell(), 128);
 }
 
 () send_give_away_nft(slice to, int query_id, slice owner) impure inline {

@@ -59,7 +59,7 @@
         .store_slice(to)
         .store_coins(0)
         .store_uint(0, 107)
-    .end_cell(), 128 + 32);
+    .end_cell(), 128);
 }
 
 () send_set_data(slice to, cell stateinit, int value, int query_id, slice helper_jetton_wallet, int offer_amount, int loan_duration, int apr_amount) impure inline {
