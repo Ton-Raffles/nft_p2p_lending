@@ -54,6 +54,8 @@
 }
 
 () send_destroy(slice to) impure inline {
+    raw_reserve(get_compute_fee(0, const::fee_const_min), 0);
+    
     send_raw_message(begin_cell()
         .store_uint(0x18, 6)
         .store_slice(to)

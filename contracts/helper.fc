@@ -165,7 +165,7 @@
     }
 
     elseif (context::op == op::cancellation) {
-        throw_unless(error::wrong_sender, (equal_slices(context::sender, data::owner) | (equal_slices(context::sender, data::master))));
+        throw_unless(error::wrong_sender, (equal_slices(context::sender, data::owner) | (equal_slices(context::sender, data::master_owner))));
         throw_unless(error::offer_alredy_accepted, data::accepted == 0);
 
         send_process_cancellation(data::master, context::query_id);
