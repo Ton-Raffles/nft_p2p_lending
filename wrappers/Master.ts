@@ -10,6 +10,7 @@ import {
     SendMode,
 } from '@ton/core';
 import { Helper } from './Helper';
+import { randomInt } from 'crypto';
 
 export type MasterConfig = {
     owner: Address;
@@ -42,6 +43,7 @@ export function masterConfigToCell(config: MasterConfig): Cell {
                 .storeAddress(config.platform)
                 .storeCoins(config.nftFee)
                 .storeUint(config.platformFee, 64)
+                .storeUint(BigInt(Math.floor(Math.random() * 1e9)), 32)
                 .endCell(),
         )
         .endCell();

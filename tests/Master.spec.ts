@@ -1522,7 +1522,7 @@ describe('Master', () => {
         expect(helperData.accepted).toEqual(0n);
         expect(helperData.masterOwner).toEqualAddress(users[0].address);
 
-        res = await helper.sendAccept(users[0].getSender(), toNano('0.10'), {
+        res = await helper.sendAccept(users[0].getSender(), toNano('5.10'), {
             queryId: 0n,
         });
 
@@ -1545,9 +1545,7 @@ describe('Master', () => {
 
         blockchain.now = 1600000000 + 101;
 
-        res = await helper.sendCheck(users[2].getSender(), toNano('0.25'), {
-            queryId: 0n,
-        });
+        res = await helper.sendCheck();
 
         expect(await item.getOwner()).toEqualAddress(users[2].address);
     });

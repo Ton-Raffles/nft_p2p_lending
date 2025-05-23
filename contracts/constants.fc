@@ -7,7 +7,6 @@ const int op::change_data = 0x7160e2b5;
 const int op::change_data_helper = 0xad68b31;
 const int op::change_amount_helper = 0x1eae57b3;
 const int op::set_data = 0x4a3ce6d9;
-const int op::check = 0x3508c65f;
 const int op::give_away_nft = 0x3c32d198;
 const int op::return_nft = 0x373beb70;
 const int op::to_offer = 0x7c820f0d;

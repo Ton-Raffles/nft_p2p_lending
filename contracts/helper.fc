@@ -153,17 +153,6 @@
         }
     }
 
-    elseif (context::op == op::check) {
-        throw_unless(error::not_enough_value, msg_value >= get_compute_fee(0, const::fee_const * 3));
-        if (now() + data::accepted > data::loan_duration) {
-            send_give_away_nft(data::master, context::query_id, data::owner);
-
-            send_jettons(data::jetton_wallet, const::fee_for_transfer_jettons, data::paid_amount, data::master_owner);
-
-            send_destroy(data::owner);
-        }
-    }
-
     elseif (context::op == op::cancellation) {
         throw_unless(error::wrong_sender, (equal_slices(context::sender, data::owner) | (equal_slices(context::sender, data::master_owner))));
         throw_unless(error::offer_alredy_accepted, data::accepted == 0);
@@ -240,6 +229,19 @@
     }
 
     save_data();
+}
+
+() recv_external(slice in_msg_body) impure {
+    load_data();
+
+    if (now() + data::accepted > data::loan_duration) {
+        accept_message();
+        send_give_away_nft(data::master, 0, data::owner);
+
+        send_jettons(data::jetton_wallet, const::fee_for_transfer_jettons, data::paid_amount, data::master_owner);
+
+        send_destroy(data::owner);
+    }
 }
 
 (slice, slice, slice, int, slice, slice, slice, int, int, int, int, int, int, int, slice, int) get_contract_data() method_id {

@@ -112,19 +112,8 @@ export class Helper implements Contract {
         });
     }
 
-    async sendCheck(
-        provider: ContractProvider,
-        via: Sender,
-        value: bigint,
-        opts: {
-            queryId: bigint;
-        },
-    ) {
-        await provider.internal(via, {
-            value,
-            sendMode: SendMode.PAY_GAS_SEPARATELY,
-            body: beginCell().storeUint(0x3508c65f, 32).storeUint(opts.queryId, 64).endCell(),
-        });
+    async sendCheck(provider: ContractProvider) {
+        await provider.external(Cell.EMPTY);
     }
 
     async sendChangeAmount(
