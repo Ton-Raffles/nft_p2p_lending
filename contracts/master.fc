@@ -69,7 +69,8 @@
             throw_unless(error::not_correct_loan_duration, data::loan_duration <= loan_duration);
         }
 
-        (cell stateinit, slice address) = get_stateinit_and_address_of_helper(const::ton_key, owner);
+        (cell stateinit, slice address) = get_stateinit_and_address_of_helper(const::ton_key, owner, data::current_helper_id);
+        data::current_helper_id += 1;
 
         send_set_data(address, stateinit, amount, context::query_id, const::ton_key, offer_amount, loan_duration, apr_amount);
 
@@ -135,7 +136,8 @@
                     return ();
                 }
             }
-            (cell stateinit, slice address) = get_stateinit_and_address_of_helper(owner_jetton_wallet, user);
+            (cell stateinit, slice address) = get_stateinit_and_address_of_helper(owner_jetton_wallet, user, data::current_helper_id);
+            data::current_helper_id += 1;
 
             send_set_data(address, stateinit, 0, context::query_id, helper_jetton_wallet, offer_amount, loan_duration, apr_amount);
             msg_value -= get_compute_fee(0, const::fee_const);
@@ -236,14 +238,14 @@
     save_data();
 }
 
-(slice, slice, slice, int, int, cell, int, int, int, cell, slice, int) get_contract_data() method_id {
+(slice, slice, slice, int, int, cell, int, int, int, cell, slice, int, int) get_contract_data() method_id {
     load_data();
-    return (data::owner, data::nft, data::jetton_wallet, data::active, data::offer_accept, data::offers, data::amount, data::loan_duration, data::apr_amount, data::helper_code, data::platform, data::platform_fee);
+    return (data::owner, data::nft, data::jetton_wallet, data::active, data::offer_accept, data::offers, data::amount, data::loan_duration, data::apr_amount, data::helper_code, data::platform, data::platform_fee, data::current_helper_id);
 }
 
-(slice) get_helper_address(slice owner_jetton_wallet, slice user) method_id {
+(slice) get_helper_address(slice owner_jetton_wallet, slice user, int helper_id) method_id {
     load_data();
 
-    (_ , slice address) = get_stateinit_and_address_of_helper(owner_jetton_wallet, user);
+    (_ , slice address) = get_stateinit_and_address_of_helper(owner_jetton_wallet, user, helper_id);
     return address;
 }

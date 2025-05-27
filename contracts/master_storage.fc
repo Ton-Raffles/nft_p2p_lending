@@ -11,6 +11,7 @@ global cell data::helper_code;
 global slice data::platform;
 global int data::nft_fee;
 global int data::platform_fee;
+global int data::current_helper_id;
 
 global int const::fee_for_transfer_jettons;
 
@@ -34,6 +35,7 @@ global slice context::sender;
     data::platform = dv~load_msg_addr();
     data::nft_fee = dv~load_coins();
     data::platform_fee = dv~load_uint(64);
+    data::current_helper_id = dv~load_uint(64);
     const::fee_for_transfer_jettons = 2 * 15000000 + 10000000 + get_compute_fee(0, const::fee_const_min);
 }
 
@@ -53,16 +55,18 @@ global slice context::sender;
             .store_slice(data::platform)
             .store_coins(data::nft_fee)
             .store_uint(data::platform_fee, 64)
+            .store_uint(data::current_helper_id, 64)
             .end_cell())
     .end_cell());
 }
 
-(cell, slice) get_stateinit_and_address_of_helper(slice owner_jetton_wallet, slice user) inline {
+(cell, slice) get_stateinit_and_address_of_helper(slice owner_jetton_wallet, slice user, int helper_id) inline {
     cell stateinit = begin_cell()
         .store_uint(0, 2)
         .store_dict(data::helper_code)
         .store_dict(begin_cell()
             .store_ref(begin_cell()
+                .store_uint(helper_id, 64)
                 .store_slice(my_address())
                 .store_uint(0, 2)
                 .store_slice(owner_jetton_wallet)

@@ -43,6 +43,7 @@ export function masterConfigToCell(config: MasterConfig): Cell {
                 .storeAddress(config.platform)
                 .storeCoins(config.nftFee)
                 .storeUint(config.platformFee, 64)
+                .storeUint(0, 64)
                 .storeUint(BigInt(Math.floor(Math.random() * 1e9)), 32)
                 .endCell(),
         )
@@ -147,6 +148,7 @@ export class Master implements Contract {
         helperCode: Cell;
         platform: Address;
         platformFee: bigint;
+        currentHelperId: bigint;
     }> {
         const res = (await provider.get('get_contract_data', [])).stack;
         return {
@@ -167,14 +169,21 @@ export class Master implements Contract {
             helperCode: res.readCell(),
             platform: res.readAddress(),
             platformFee: res.readBigNumber(),
+            currentHelperId: res.readBigNumber(),
         };
     }
 
-    async getHelper(provider: ContractProvider, jettonWallet: Address, user: Address): Promise<Helper> {
+    async getHelper(
+        provider: ContractProvider,
+        jettonWallet: Address,
+        user: Address,
+        helperId: bigint,
+    ): Promise<Helper> {
         const stack = (
             await provider.get('get_helper_address', [
                 { type: 'slice', cell: beginCell().storeAddress(jettonWallet).endCell() },
                 { type: 'slice', cell: beginCell().storeAddress(user).endCell() },
+                { type: 'int', value: helperId },
             ])
         ).stack;
         return Helper.createFromAddress(stack.readAddress());

@@ -244,8 +244,8 @@
     }
 }
 
-(slice, slice, slice, int, slice, slice, slice, int, int, int, int, int, int, int, slice, int) get_contract_data() method_id {
+(int, slice, slice, slice, int, slice, slice, slice, int, int, int, int, int, int, int, slice, int) get_contract_data() method_id {
     load_data();
 
-    return (data::master, data::jetton_wallet, data::owner_jetton_wallet, data::paid_amount, data::owner, data::master_owner, data::platform, data::amount, data::loan_duration, data::apr_amount, data::accepted, data::offer::loan_duration, data::offer::apr_amount, data::offer::extra_reward, data::offer::turn, data::platform_fee);
+    return (data::helper_id, data::master, data::jetton_wallet, data::owner_jetton_wallet, data::paid_amount, data::owner, data::master_owner, data::platform, data::amount, data::loan_duration, data::apr_amount, data::accepted, data::offer::loan_duration, data::offer::apr_amount, data::offer::extra_reward, data::offer::turn, data::platform_fee);
 }

@@ -240,7 +240,7 @@ describe('Master', () => {
                 .storeAddress(users[2].address)
                 .storeAddress(
                     await jettonMinter.getWalletAddressOf(
-                        (await master.getHelper(usersJettonWallet[2].address, users[2].address)).address,
+                        (await master.getHelper(usersJettonWallet[2].address, users[2].address, 0n)).address,
                     ),
                 )
                 .storeAddress(usersJettonWallet[2].address)
@@ -252,7 +252,7 @@ describe('Master', () => {
 
         expect(res.transactions).toHaveTransaction({
             from: master.address,
-            to: (await master.getHelper(usersJettonWallet[2].address, users[2].address)).address,
+            to: (await master.getHelper(usersJettonWallet[2].address, users[2].address, 0n)).address,
             deploy: true,
             success: true,
         });
@@ -260,7 +260,7 @@ describe('Master', () => {
         let helperData = await blockchain
             .openContract(
                 Helper.createFromAddress(
-                    (await master.getHelper(usersJettonWallet[2].address, users[2].address)).address,
+                    (await master.getHelper(usersJettonWallet[2].address, users[2].address, 0n)).address,
                 ),
             )
             .getContractData();
@@ -268,7 +268,7 @@ describe('Master', () => {
         expect(helperData.owner).toEqualAddress(users[2].address);
         expect(helperData.jettonWallet).toEqualAddress(
             await jettonMinter.getWalletAddressOf(
-                (await master.getHelper(usersJettonWallet[2].address, users[2].address)).address,
+                (await master.getHelper(usersJettonWallet[2].address, users[2].address, 0n)).address,
             ),
         );
         expect(helperData.ownerJettonWallet).toEqualAddress(usersJettonWallet[2].address);
@@ -310,7 +310,7 @@ describe('Master', () => {
                 .storeAddress(users[2].address)
                 .storeAddress(
                     await jettonMinter.getWalletAddressOf(
-                        (await master.getHelper(usersJettonWallet[2].address, users[2].address)).address,
+                        (await master.getHelper(usersJettonWallet[2].address, users[2].address, 0n)).address,
                     ),
                 )
                 .storeAddress(usersJettonWallet[2].address)
@@ -323,7 +323,7 @@ describe('Master', () => {
         expect(
             (
                 await blockchain.getContract(
-                    (await master.getHelper(usersJettonWallet[2].address, users[2].address)).address,
+                    (await master.getHelper(usersJettonWallet[2].address, users[2].address, 0n)).address,
                 )
             ).accountState?.type,
         ).not.toEqual('active');
@@ -358,7 +358,7 @@ describe('Master', () => {
                 .storeAddress(users[2].address)
                 .storeAddress(
                     await jettonMinter.getWalletAddressOf(
-                        (await master.getHelper(usersJettonWallet[2].address, users[2].address)).address,
+                        (await master.getHelper(usersJettonWallet[2].address, users[2].address, 0n)).address,
                     ),
                 )
                 .storeAddress(usersJettonWallet[2].address)
@@ -371,7 +371,7 @@ describe('Master', () => {
         expect(
             (
                 await blockchain.getContract(
-                    (await master.getHelper(usersJettonWallet[2].address, users[2].address)).address,
+                    (await master.getHelper(usersJettonWallet[2].address, users[2].address, 0n)).address,
                 )
             ).accountState?.type,
         ).not.toEqual('active');
@@ -406,7 +406,7 @@ describe('Master', () => {
                 .storeAddress(users[2].address)
                 .storeAddress(
                     await jettonMinter.getWalletAddressOf(
-                        (await master.getHelper(usersJettonWallet[2].address, users[2].address)).address,
+                        (await master.getHelper(usersJettonWallet[2].address, users[2].address, 0n)).address,
                     ),
                 )
                 .storeAddress(usersJettonWallet[2].address)
@@ -417,7 +417,7 @@ describe('Master', () => {
         expect(
             (
                 await blockchain.getContract(
-                    (await master.getHelper(usersJettonWallet[2].address, users[2].address)).address,
+                    (await master.getHelper(usersJettonWallet[2].address, users[2].address, 0n)).address,
                 )
             ).accountState?.type,
         ).not.toEqual('active');
@@ -452,7 +452,7 @@ describe('Master', () => {
                 .storeAddress(users[2].address)
                 .storeAddress(
                     await jettonMinter.getWalletAddressOf(
-                        (await master.getHelper(usersJettonWallet[2].address, users[2].address)).address,
+                        (await master.getHelper(usersJettonWallet[2].address, users[2].address, 0n)).address,
                     ),
                 )
                 .storeAddress(usersJettonWallet[2].address)
@@ -463,7 +463,7 @@ describe('Master', () => {
         expect(
             (
                 await blockchain.getContract(
-                    (await master.getHelper(usersJettonWallet[2].address, users[2].address)).address,
+                    (await master.getHelper(usersJettonWallet[2].address, users[2].address, 0n)).address,
                 )
             ).accountState?.type,
         ).not.toEqual('active');
@@ -498,7 +498,7 @@ describe('Master', () => {
                 .storeAddress(users[2].address)
                 .storeAddress(
                     await jettonMinter.getWalletAddressOf(
-                        (await master.getHelper(usersJettonWallet[2].address, users[2].address)).address,
+                        (await master.getHelper(usersJettonWallet[2].address, users[2].address, 0n)).address,
                     ),
                 )
                 .storeAddress(usersJettonWallet[2].address)
@@ -509,7 +509,7 @@ describe('Master', () => {
         expect(
             (
                 await blockchain.getContract(
-                    (await master.getHelper(usersJettonWallet[2].address, users[2].address)).address,
+                    (await master.getHelper(usersJettonWallet[2].address, users[2].address, 0n)).address,
                 )
             ).accountState?.type,
         ).not.toEqual('active');
@@ -542,7 +542,7 @@ describe('Master', () => {
                 .storeAddress(users[2].address)
                 .storeAddress(
                     await jettonMinter.getWalletAddressOf(
-                        (await master.getHelper(usersJettonWallet[2].address, users[2].address)).address,
+                        (await master.getHelper(usersJettonWallet[2].address, users[2].address, 0n)).address,
                     ),
                 )
                 .storeAddress(usersJettonWallet[2].address)
@@ -555,7 +555,7 @@ describe('Master', () => {
         expect(
             (
                 await blockchain.getContract(
-                    (await master.getHelper(usersJettonWallet[2].address, users[2].address)).address,
+                    (await master.getHelper(usersJettonWallet[2].address, users[2].address, 0n)).address,
                 )
             ).accountState?.type,
         ).not.toEqual('active');
@@ -590,7 +590,7 @@ describe('Master', () => {
                 .storeAddress(users[2].address)
                 .storeAddress(
                     await jettonMinter.getWalletAddressOf(
-                        (await master.getHelper(usersJettonWallet[2].address, users[2].address)).address,
+                        (await master.getHelper(usersJettonWallet[2].address, users[2].address, 0n)).address,
                     ),
                 )
                 .storeAddress(usersJettonWallet[2].address)
@@ -601,7 +601,9 @@ describe('Master', () => {
         );
 
         let helper = blockchain.openContract(
-            Helper.createFromAddress((await master.getHelper(usersJettonWallet[2].address, users[2].address)).address),
+            Helper.createFromAddress(
+                (await master.getHelper(usersJettonWallet[2].address, users[2].address, 0n)).address,
+            ),
         );
 
         let helperData = await helper.getContractData();
@@ -609,7 +611,7 @@ describe('Master', () => {
         expect(helperData.owner).toEqualAddress(users[2].address);
         expect(helperData.jettonWallet).toEqualAddress(
             await jettonMinter.getWalletAddressOf(
-                (await master.getHelper(usersJettonWallet[2].address, users[2].address)).address,
+                (await master.getHelper(usersJettonWallet[2].address, users[2].address, 0n)).address,
             ),
         );
         expect(helperData.ownerJettonWallet).toEqualAddress(usersJettonWallet[2].address);
@@ -630,7 +632,7 @@ describe('Master', () => {
         expect(helperData.owner).toEqualAddress(users[2].address);
         expect(helperData.jettonWallet).toEqualAddress(
             await jettonMinter.getWalletAddressOf(
-                (await master.getHelper(usersJettonWallet[2].address, users[2].address)).address,
+                (await master.getHelper(usersJettonWallet[2].address, users[2].address, 0n)).address,
             ),
         );
         expect(helperData.ownerJettonWallet).toEqualAddress(usersJettonWallet[2].address);
@@ -672,7 +674,7 @@ describe('Master', () => {
                 .storeAddress(users[2].address)
                 .storeAddress(
                     await jettonMinter.getWalletAddressOf(
-                        (await master.getHelper(usersJettonWallet[2].address, users[2].address)).address,
+                        (await master.getHelper(usersJettonWallet[2].address, users[2].address, 0n)).address,
                     ),
                 )
                 .storeAddress(usersJettonWallet[2].address)
@@ -683,7 +685,9 @@ describe('Master', () => {
         );
 
         let helper = blockchain.openContract(
-            Helper.createFromAddress((await master.getHelper(usersJettonWallet[2].address, users[2].address)).address),
+            Helper.createFromAddress(
+                (await master.getHelper(usersJettonWallet[2].address, users[2].address, 0n)).address,
+            ),
         );
 
         let helperData = await helper.getContractData();
@@ -691,7 +695,7 @@ describe('Master', () => {
         expect(helperData.owner).toEqualAddress(users[2].address);
         expect(helperData.jettonWallet).toEqualAddress(
             await jettonMinter.getWalletAddressOf(
-                (await master.getHelper(usersJettonWallet[2].address, users[2].address)).address,
+                (await master.getHelper(usersJettonWallet[2].address, users[2].address, 0n)).address,
             ),
         );
         expect(helperData.ownerJettonWallet).toEqualAddress(usersJettonWallet[2].address);
@@ -712,7 +716,7 @@ describe('Master', () => {
         expect(helperData.owner).toEqualAddress(users[2].address);
         expect(helperData.jettonWallet).toEqualAddress(
             await jettonMinter.getWalletAddressOf(
-                (await master.getHelper(usersJettonWallet[2].address, users[2].address)).address,
+                (await master.getHelper(usersJettonWallet[2].address, users[2].address, 0n)).address,
             ),
         );
         expect(helperData.ownerJettonWallet).toEqualAddress(usersJettonWallet[2].address);
@@ -735,7 +739,7 @@ describe('Master', () => {
                 .storeAddress(users[3].address)
                 .storeAddress(
                     await jettonMinter.getWalletAddressOf(
-                        (await master.getHelper(usersJettonWallet[2].address, users[2].address)).address,
+                        (await master.getHelper(usersJettonWallet[2].address, users[2].address, 0n)).address,
                     ),
                 )
                 .storeAddress(usersJettonWallet[2].address)
@@ -748,7 +752,7 @@ describe('Master', () => {
         expect(
             (
                 await blockchain.getContract(
-                    (await master.getHelper(usersJettonWallet[3].address, users[2].address)).address,
+                    (await master.getHelper(usersJettonWallet[3].address, users[2].address, 1n)).address,
                 )
             ).accountState?.type,
         ).not.toEqual('active');
@@ -783,7 +787,7 @@ describe('Master', () => {
                 .storeAddress(users[2].address)
                 .storeAddress(
                     await jettonMinter.getWalletAddressOf(
-                        (await master.getHelper(usersJettonWallet[2].address, users[2].address)).address,
+                        (await master.getHelper(usersJettonWallet[2].address, users[2].address, 0n)).address,
                     ),
                 )
                 .storeAddress(usersJettonWallet[2].address)
@@ -794,7 +798,9 @@ describe('Master', () => {
         );
 
         let helper = blockchain.openContract(
-            Helper.createFromAddress((await master.getHelper(usersJettonWallet[2].address, users[2].address)).address),
+            Helper.createFromAddress(
+                (await master.getHelper(usersJettonWallet[2].address, users[2].address, 0n)).address,
+            ),
         );
 
         let helperData = await helper.getContractData();
@@ -802,7 +808,7 @@ describe('Master', () => {
         expect(helperData.owner).toEqualAddress(users[2].address);
         expect(helperData.jettonWallet).toEqualAddress(
             await jettonMinter.getWalletAddressOf(
-                (await master.getHelper(usersJettonWallet[2].address, users[2].address)).address,
+                (await master.getHelper(usersJettonWallet[2].address, users[2].address, 0n)).address,
             ),
         );
         expect(helperData.ownerJettonWallet).toEqualAddress(usersJettonWallet[2].address);
@@ -823,7 +829,7 @@ describe('Master', () => {
         expect(helperData.owner).toEqualAddress(users[2].address);
         expect(helperData.jettonWallet).toEqualAddress(
             await jettonMinter.getWalletAddressOf(
-                (await master.getHelper(usersJettonWallet[2].address, users[2].address)).address,
+                (await master.getHelper(usersJettonWallet[2].address, users[2].address, 0n)).address,
             ),
         );
         expect(helperData.ownerJettonWallet).toEqualAddress(usersJettonWallet[2].address);
@@ -869,7 +875,7 @@ describe('Master', () => {
                 .storeAddress(users[2].address)
                 .storeAddress(
                     await jettonMinter.getWalletAddressOf(
-                        (await master.getHelper(usersJettonWallet[2].address, users[2].address)).address,
+                        (await master.getHelper(usersJettonWallet[2].address, users[2].address, 0n)).address,
                     ),
                 )
                 .storeAddress(usersJettonWallet[2].address)
@@ -880,7 +886,9 @@ describe('Master', () => {
         );
 
         let helper = blockchain.openContract(
-            Helper.createFromAddress((await master.getHelper(usersJettonWallet[2].address, users[2].address)).address),
+            Helper.createFromAddress(
+                (await master.getHelper(usersJettonWallet[2].address, users[2].address, 0n)).address,
+            ),
         );
 
         let helperData = await helper.getContractData();
@@ -888,7 +896,7 @@ describe('Master', () => {
         expect(helperData.owner).toEqualAddress(users[2].address);
         expect(helperData.jettonWallet).toEqualAddress(
             await jettonMinter.getWalletAddressOf(
-                (await master.getHelper(usersJettonWallet[2].address, users[2].address)).address,
+                (await master.getHelper(usersJettonWallet[2].address, users[2].address, 0n)).address,
             ),
         );
         expect(helperData.ownerJettonWallet).toEqualAddress(usersJettonWallet[2].address);
@@ -909,7 +917,7 @@ describe('Master', () => {
         expect(helperData.owner).toEqualAddress(users[2].address);
         expect(helperData.jettonWallet).toEqualAddress(
             await jettonMinter.getWalletAddressOf(
-                (await master.getHelper(usersJettonWallet[2].address, users[2].address)).address,
+                (await master.getHelper(usersJettonWallet[2].address, users[2].address, 0n)).address,
             ),
         );
         expect(helperData.ownerJettonWallet).toEqualAddress(usersJettonWallet[2].address);
@@ -955,7 +963,7 @@ describe('Master', () => {
                 .storeAddress(users[2].address)
                 .storeAddress(
                     await jettonMinter.getWalletAddressOf(
-                        (await master.getHelper(usersJettonWallet[2].address, users[2].address)).address,
+                        (await master.getHelper(usersJettonWallet[2].address, users[2].address, 0n)).address,
                     ),
                 )
                 .storeAddress(usersJettonWallet[2].address)
@@ -966,7 +974,9 @@ describe('Master', () => {
         );
 
         let helper = blockchain.openContract(
-            Helper.createFromAddress((await master.getHelper(usersJettonWallet[2].address, users[2].address)).address),
+            Helper.createFromAddress(
+                (await master.getHelper(usersJettonWallet[2].address, users[2].address, 0n)).address,
+            ),
         );
 
         let helperData = await helper.getContractData();
@@ -974,7 +984,7 @@ describe('Master', () => {
         expect(helperData.owner).toEqualAddress(users[2].address);
         expect(helperData.jettonWallet).toEqualAddress(
             await jettonMinter.getWalletAddressOf(
-                (await master.getHelper(usersJettonWallet[2].address, users[2].address)).address,
+                (await master.getHelper(usersJettonWallet[2].address, users[2].address, 0n)).address,
             ),
         );
         expect(helperData.ownerJettonWallet).toEqualAddress(usersJettonWallet[2].address);
@@ -995,7 +1005,7 @@ describe('Master', () => {
         expect(helperData.owner).toEqualAddress(users[2].address);
         expect(helperData.jettonWallet).toEqualAddress(
             await jettonMinter.getWalletAddressOf(
-                (await master.getHelper(usersJettonWallet[2].address, users[2].address)).address,
+                (await master.getHelper(usersJettonWallet[2].address, users[2].address, 0n)).address,
             ),
         );
         expect(helperData.ownerJettonWallet).toEqualAddress(usersJettonWallet[2].address);
@@ -1045,7 +1055,7 @@ describe('Master', () => {
                 .storeAddress(users[2].address)
                 .storeAddress(
                     await jettonMinter.getWalletAddressOf(
-                        (await master.getHelper(usersJettonWallet[2].address, users[2].address)).address,
+                        (await master.getHelper(usersJettonWallet[2].address, users[2].address, 0n)).address,
                     ),
                 )
                 .storeAddress(usersJettonWallet[2].address)
@@ -1056,7 +1066,9 @@ describe('Master', () => {
         );
 
         let helper = blockchain.openContract(
-            Helper.createFromAddress((await master.getHelper(usersJettonWallet[2].address, users[2].address)).address),
+            Helper.createFromAddress(
+                (await master.getHelper(usersJettonWallet[2].address, users[2].address, 0n)).address,
+            ),
         );
 
         let helperData = await helper.getContractData();
@@ -1064,7 +1076,7 @@ describe('Master', () => {
         expect(helperData.owner).toEqualAddress(users[2].address);
         expect(helperData.jettonWallet).toEqualAddress(
             await jettonMinter.getWalletAddressOf(
-                (await master.getHelper(usersJettonWallet[2].address, users[2].address)).address,
+                (await master.getHelper(usersJettonWallet[2].address, users[2].address, 0n)).address,
             ),
         );
         expect(helperData.ownerJettonWallet).toEqualAddress(usersJettonWallet[2].address);
@@ -1110,7 +1122,7 @@ describe('Master', () => {
                 .storeAddress(users[2].address)
                 .storeAddress(
                     await jettonMinter.getWalletAddressOf(
-                        (await master.getHelper(usersJettonWallet[2].address, users[2].address)).address,
+                        (await master.getHelper(usersJettonWallet[2].address, users[2].address, 0n)).address,
                     ),
                 )
                 .storeAddress(usersJettonWallet[2].address)
@@ -1121,7 +1133,9 @@ describe('Master', () => {
         );
 
         let helper = blockchain.openContract(
-            Helper.createFromAddress((await master.getHelper(usersJettonWallet[2].address, users[2].address)).address),
+            Helper.createFromAddress(
+                (await master.getHelper(usersJettonWallet[2].address, users[2].address, 0n)).address,
+            ),
         );
 
         let helperData = await helper.getContractData();
@@ -1129,7 +1143,7 @@ describe('Master', () => {
         expect(helperData.owner).toEqualAddress(users[2].address);
         expect(helperData.jettonWallet).toEqualAddress(
             await jettonMinter.getWalletAddressOf(
-                (await master.getHelper(usersJettonWallet[2].address, users[2].address)).address,
+                (await master.getHelper(usersJettonWallet[2].address, users[2].address, 0n)).address,
             ),
         );
         expect(helperData.ownerJettonWallet).toEqualAddress(usersJettonWallet[2].address);
@@ -1150,7 +1164,7 @@ describe('Master', () => {
         expect(helperData.owner).toEqualAddress(users[2].address);
         expect(helperData.jettonWallet).toEqualAddress(
             await jettonMinter.getWalletAddressOf(
-                (await master.getHelper(usersJettonWallet[2].address, users[2].address)).address,
+                (await master.getHelper(usersJettonWallet[2].address, users[2].address, 0n)).address,
             ),
         );
         expect(helperData.ownerJettonWallet).toEqualAddress(usersJettonWallet[2].address);
@@ -1200,7 +1214,7 @@ describe('Master', () => {
                 .storeAddress(users[2].address)
                 .storeAddress(
                     await jettonMinter.getWalletAddressOf(
-                        (await master.getHelper(usersJettonWallet[2].address, users[2].address)).address,
+                        (await master.getHelper(usersJettonWallet[2].address, users[2].address, 0n)).address,
                     ),
                 )
                 .storeAddress(usersJettonWallet[2].address)
@@ -1211,7 +1225,9 @@ describe('Master', () => {
         );
 
         let helper = blockchain.openContract(
-            Helper.createFromAddress((await master.getHelper(usersJettonWallet[2].address, users[2].address)).address),
+            Helper.createFromAddress(
+                (await master.getHelper(usersJettonWallet[2].address, users[2].address, 0n)).address,
+            ),
         );
 
         let helperData = await helper.getContractData();
@@ -1219,7 +1235,7 @@ describe('Master', () => {
         expect(helperData.owner).toEqualAddress(users[2].address);
         expect(helperData.jettonWallet).toEqualAddress(
             await jettonMinter.getWalletAddressOf(
-                (await master.getHelper(usersJettonWallet[2].address, users[2].address)).address,
+                (await master.getHelper(usersJettonWallet[2].address, users[2].address, 0n)).address,
             ),
         );
         expect(helperData.ownerJettonWallet).toEqualAddress(usersJettonWallet[2].address);
@@ -1240,7 +1256,7 @@ describe('Master', () => {
         expect(helperData.owner).toEqualAddress(users[2].address);
         expect(helperData.jettonWallet).toEqualAddress(
             await jettonMinter.getWalletAddressOf(
-                (await master.getHelper(usersJettonWallet[2].address, users[2].address)).address,
+                (await master.getHelper(usersJettonWallet[2].address, users[2].address, 0n)).address,
             ),
         );
         expect(helperData.ownerJettonWallet).toEqualAddress(usersJettonWallet[2].address);
@@ -1292,7 +1308,7 @@ describe('Master', () => {
                 .storeAddress(users[2].address)
                 .storeAddress(
                     await jettonMinter.getWalletAddressOf(
-                        (await master.getHelper(usersJettonWallet[2].address, users[2].address)).address,
+                        (await master.getHelper(usersJettonWallet[2].address, users[2].address, 0n)).address,
                     ),
                 )
                 .storeAddress(usersJettonWallet[2].address)
@@ -1303,7 +1319,9 @@ describe('Master', () => {
         );
 
         let helper = blockchain.openContract(
-            Helper.createFromAddress((await master.getHelper(usersJettonWallet[2].address, users[2].address)).address),
+            Helper.createFromAddress(
+                (await master.getHelper(usersJettonWallet[2].address, users[2].address, 0n)).address,
+            ),
         );
 
         let helperData = await helper.getContractData();
@@ -1311,7 +1329,7 @@ describe('Master', () => {
         expect(helperData.owner).toEqualAddress(users[2].address);
         expect(helperData.jettonWallet).toEqualAddress(
             await jettonMinter.getWalletAddressOf(
-                (await master.getHelper(usersJettonWallet[2].address, users[2].address)).address,
+                (await master.getHelper(usersJettonWallet[2].address, users[2].address, 0n)).address,
             ),
         );
         expect(helperData.ownerJettonWallet).toEqualAddress(usersJettonWallet[2].address);
@@ -1332,7 +1350,7 @@ describe('Master', () => {
         expect(helperData.owner).toEqualAddress(users[2].address);
         expect(helperData.jettonWallet).toEqualAddress(
             await jettonMinter.getWalletAddressOf(
-                (await master.getHelper(usersJettonWallet[2].address, users[2].address)).address,
+                (await master.getHelper(usersJettonWallet[2].address, users[2].address, 0n)).address,
             ),
         );
         expect(helperData.ownerJettonWallet).toEqualAddress(usersJettonWallet[2].address);
@@ -1410,6 +1428,7 @@ describe('Master', () => {
                     await master.getHelper(
                         Address.parse('UQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAJKZ'),
                         users[2].address,
+                        0n,
                     )
                 ).address,
             ),
@@ -1491,7 +1510,7 @@ describe('Master', () => {
                 .storeAddress(users[2].address)
                 .storeAddress(
                     await jettonMinter.getWalletAddressOf(
-                        (await master.getHelper(usersJettonWallet[2].address, users[2].address)).address,
+                        (await master.getHelper(usersJettonWallet[2].address, users[2].address, 0n)).address,
                     ),
                 )
                 .storeAddress(usersJettonWallet[2].address)
@@ -1502,7 +1521,9 @@ describe('Master', () => {
         );
 
         let helper = blockchain.openContract(
-            Helper.createFromAddress((await master.getHelper(usersJettonWallet[2].address, users[2].address)).address),
+            Helper.createFromAddress(
+                (await master.getHelper(usersJettonWallet[2].address, users[2].address, 0n)).address,
+            ),
         );
 
         let helperData = await helper.getContractData();
@@ -1510,7 +1531,7 @@ describe('Master', () => {
         expect(helperData.owner).toEqualAddress(users[2].address);
         expect(helperData.jettonWallet).toEqualAddress(
             await jettonMinter.getWalletAddressOf(
-                (await master.getHelper(usersJettonWallet[2].address, users[2].address)).address,
+                (await master.getHelper(usersJettonWallet[2].address, users[2].address, 0n)).address,
             ),
         );
         expect(helperData.ownerJettonWallet).toEqualAddress(usersJettonWallet[2].address);
@@ -1531,7 +1552,7 @@ describe('Master', () => {
         expect(helperData.owner).toEqualAddress(users[2].address);
         expect(helperData.jettonWallet).toEqualAddress(
             await jettonMinter.getWalletAddressOf(
-                (await master.getHelper(usersJettonWallet[2].address, users[2].address)).address,
+                (await master.getHelper(usersJettonWallet[2].address, users[2].address, 0n)).address,
             ),
         );
         expect(helperData.ownerJettonWallet).toEqualAddress(usersJettonWallet[2].address);
@@ -1579,7 +1600,7 @@ describe('Master', () => {
                 .storeAddress(users[2].address)
                 .storeAddress(
                     await jettonMinter.getWalletAddressOf(
-                        (await master.getHelper(usersJettonWallet[2].address, users[2].address)).address,
+                        (await master.getHelper(usersJettonWallet[2].address, users[2].address, 0n)).address,
                     ),
                 )
                 .storeAddress(usersJettonWallet[2].address)
@@ -1590,7 +1611,9 @@ describe('Master', () => {
         );
 
         let helper = blockchain.openContract(
-            Helper.createFromAddress((await master.getHelper(usersJettonWallet[2].address, users[2].address)).address),
+            Helper.createFromAddress(
+                (await master.getHelper(usersJettonWallet[2].address, users[2].address, 0n)).address,
+            ),
         );
 
         let helperData = await helper.getContractData();
@@ -1598,7 +1621,7 @@ describe('Master', () => {
         expect(helperData.owner).toEqualAddress(users[2].address);
         expect(helperData.jettonWallet).toEqualAddress(
             await jettonMinter.getWalletAddressOf(
-                (await master.getHelper(usersJettonWallet[2].address, users[2].address)).address,
+                (await master.getHelper(usersJettonWallet[2].address, users[2].address, 0n)).address,
             ),
         );
         expect(helperData.ownerJettonWallet).toEqualAddress(usersJettonWallet[2].address);
@@ -1619,7 +1642,7 @@ describe('Master', () => {
         expect(helperData.owner).toEqualAddress(users[2].address);
         expect(helperData.jettonWallet).toEqualAddress(
             await jettonMinter.getWalletAddressOf(
-                (await master.getHelper(usersJettonWallet[2].address, users[2].address)).address,
+                (await master.getHelper(usersJettonWallet[2].address, users[2].address, 0n)).address,
             ),
         );
         expect(helperData.ownerJettonWallet).toEqualAddress(usersJettonWallet[2].address);
@@ -1643,7 +1666,7 @@ describe('Master', () => {
         expect(helperData.owner).toEqualAddress(users[2].address);
         expect(helperData.jettonWallet).toEqualAddress(
             await jettonMinter.getWalletAddressOf(
-                (await master.getHelper(usersJettonWallet[2].address, users[2].address)).address,
+                (await master.getHelper(usersJettonWallet[2].address, users[2].address, 0n)).address,
             ),
         );
         expect(helperData.ownerJettonWallet).toEqualAddress(usersJettonWallet[2].address);
@@ -1689,7 +1712,7 @@ describe('Master', () => {
                 .storeAddress(users[2].address)
                 .storeAddress(
                     await jettonMinter.getWalletAddressOf(
-                        (await master.getHelper(usersJettonWallet[2].address, users[2].address)).address,
+                        (await master.getHelper(usersJettonWallet[2].address, users[2].address, 0n)).address,
                     ),
                 )
                 .storeAddress(usersJettonWallet[2].address)
@@ -1700,7 +1723,9 @@ describe('Master', () => {
         );
 
         let helper = blockchain.openContract(
-            Helper.createFromAddress((await master.getHelper(usersJettonWallet[2].address, users[2].address)).address),
+            Helper.createFromAddress(
+                (await master.getHelper(usersJettonWallet[2].address, users[2].address, 0n)).address,
+            ),
         );
 
         let helperData = await helper.getContractData();
@@ -1708,7 +1733,7 @@ describe('Master', () => {
         expect(helperData.owner).toEqualAddress(users[2].address);
         expect(helperData.jettonWallet).toEqualAddress(
             await jettonMinter.getWalletAddressOf(
-                (await master.getHelper(usersJettonWallet[2].address, users[2].address)).address,
+                (await master.getHelper(usersJettonWallet[2].address, users[2].address, 0n)).address,
             ),
         );
         expect(helperData.ownerJettonWallet).toEqualAddress(usersJettonWallet[2].address);
@@ -1729,7 +1754,7 @@ describe('Master', () => {
         expect(helperData.owner).toEqualAddress(users[2].address);
         expect(helperData.jettonWallet).toEqualAddress(
             await jettonMinter.getWalletAddressOf(
-                (await master.getHelper(usersJettonWallet[2].address, users[2].address)).address,
+                (await master.getHelper(usersJettonWallet[2].address, users[2].address, 0n)).address,
             ),
         );
         expect(helperData.ownerJettonWallet).toEqualAddress(usersJettonWallet[2].address);
@@ -1753,7 +1778,7 @@ describe('Master', () => {
         expect(helperData.owner).toEqualAddress(users[2].address);
         expect(helperData.jettonWallet).toEqualAddress(
             await jettonMinter.getWalletAddressOf(
-                (await master.getHelper(usersJettonWallet[2].address, users[2].address)).address,
+                (await master.getHelper(usersJettonWallet[2].address, users[2].address, 0n)).address,
             ),
         );
         expect(helperData.ownerJettonWallet).toEqualAddress(usersJettonWallet[2].address);
@@ -1781,7 +1806,7 @@ describe('Master', () => {
         expect(helperData.owner).toEqualAddress(users[2].address);
         expect(helperData.jettonWallet).toEqualAddress(
             await jettonMinter.getWalletAddressOf(
-                (await master.getHelper(usersJettonWallet[2].address, users[2].address)).address,
+                (await master.getHelper(usersJettonWallet[2].address, users[2].address, 0n)).address,
             ),
         );
         expect(helperData.ownerJettonWallet).toEqualAddress(usersJettonWallet[2].address);
@@ -1827,7 +1852,7 @@ describe('Master', () => {
                 .storeAddress(users[2].address)
                 .storeAddress(
                     await jettonMinter.getWalletAddressOf(
-                        (await master.getHelper(usersJettonWallet[2].address, users[2].address)).address,
+                        (await master.getHelper(usersJettonWallet[2].address, users[2].address, 0n)).address,
                     ),
                 )
                 .storeAddress(usersJettonWallet[2].address)
@@ -1838,7 +1863,9 @@ describe('Master', () => {
         );
 
         let helper = blockchain.openContract(
-            Helper.createFromAddress((await master.getHelper(usersJettonWallet[2].address, users[2].address)).address),
+            Helper.createFromAddress(
+                (await master.getHelper(usersJettonWallet[2].address, users[2].address, 0n)).address,
+            ),
         );
 
         let helperData = await helper.getContractData();
@@ -1846,7 +1873,7 @@ describe('Master', () => {
         expect(helperData.owner).toEqualAddress(users[2].address);
         expect(helperData.jettonWallet).toEqualAddress(
             await jettonMinter.getWalletAddressOf(
-                (await master.getHelper(usersJettonWallet[2].address, users[2].address)).address,
+                (await master.getHelper(usersJettonWallet[2].address, users[2].address, 0n)).address,
             ),
         );
         expect(helperData.ownerJettonWallet).toEqualAddress(usersJettonWallet[2].address);
@@ -1867,7 +1894,7 @@ describe('Master', () => {
         expect(helperData.owner).toEqualAddress(users[2].address);
         expect(helperData.jettonWallet).toEqualAddress(
             await jettonMinter.getWalletAddressOf(
-                (await master.getHelper(usersJettonWallet[2].address, users[2].address)).address,
+                (await master.getHelper(usersJettonWallet[2].address, users[2].address, 0n)).address,
             ),
         );
         expect(helperData.ownerJettonWallet).toEqualAddress(usersJettonWallet[2].address);
@@ -1891,7 +1918,7 @@ describe('Master', () => {
         expect(helperData.owner).toEqualAddress(users[2].address);
         expect(helperData.jettonWallet).toEqualAddress(
             await jettonMinter.getWalletAddressOf(
-                (await master.getHelper(usersJettonWallet[2].address, users[2].address)).address,
+                (await master.getHelper(usersJettonWallet[2].address, users[2].address, 0n)).address,
             ),
         );
         expect(helperData.ownerJettonWallet).toEqualAddress(usersJettonWallet[2].address);
@@ -1923,7 +1950,7 @@ describe('Master', () => {
         expect(helperData.owner).toEqualAddress(users[2].address);
         expect(helperData.jettonWallet).toEqualAddress(
             await jettonMinter.getWalletAddressOf(
-                (await master.getHelper(usersJettonWallet[2].address, users[2].address)).address,
+                (await master.getHelper(usersJettonWallet[2].address, users[2].address, 0n)).address,
             ),
         );
         expect(helperData.ownerJettonWallet).toEqualAddress(usersJettonWallet[2].address);
@@ -1969,7 +1996,7 @@ describe('Master', () => {
                 .storeAddress(users[2].address)
                 .storeAddress(
                     await jettonMinter.getWalletAddressOf(
-                        (await master.getHelper(usersJettonWallet[2].address, users[2].address)).address,
+                        (await master.getHelper(usersJettonWallet[2].address, users[2].address, 0n)).address,
                     ),
                 )
                 .storeAddress(usersJettonWallet[2].address)
@@ -1980,7 +2007,9 @@ describe('Master', () => {
         );
 
         let helper = blockchain.openContract(
-            Helper.createFromAddress((await master.getHelper(usersJettonWallet[2].address, users[2].address)).address),
+            Helper.createFromAddress(
+                (await master.getHelper(usersJettonWallet[2].address, users[2].address, 0n)).address,
+            ),
         );
 
         let helperData = await helper.getContractData();
@@ -1988,7 +2017,7 @@ describe('Master', () => {
         expect(helperData.owner).toEqualAddress(users[2].address);
         expect(helperData.jettonWallet).toEqualAddress(
             await jettonMinter.getWalletAddressOf(
-                (await master.getHelper(usersJettonWallet[2].address, users[2].address)).address,
+                (await master.getHelper(usersJettonWallet[2].address, users[2].address, 0n)).address,
             ),
         );
         expect(helperData.ownerJettonWallet).toEqualAddress(usersJettonWallet[2].address);
@@ -2009,7 +2038,7 @@ describe('Master', () => {
         expect(helperData.owner).toEqualAddress(users[2].address);
         expect(helperData.jettonWallet).toEqualAddress(
             await jettonMinter.getWalletAddressOf(
-                (await master.getHelper(usersJettonWallet[2].address, users[2].address)).address,
+                (await master.getHelper(usersJettonWallet[2].address, users[2].address, 0n)).address,
             ),
         );
         expect(helperData.ownerJettonWallet).toEqualAddress(usersJettonWallet[2].address);
@@ -2033,7 +2062,7 @@ describe('Master', () => {
         expect(helperData.owner).toEqualAddress(users[2].address);
         expect(helperData.jettonWallet).toEqualAddress(
             await jettonMinter.getWalletAddressOf(
-                (await master.getHelper(usersJettonWallet[2].address, users[2].address)).address,
+                (await master.getHelper(usersJettonWallet[2].address, users[2].address, 0n)).address,
             ),
         );
         expect(helperData.ownerJettonWallet).toEqualAddress(usersJettonWallet[2].address);
@@ -2059,7 +2088,7 @@ describe('Master', () => {
         expect(helperData.owner).toEqualAddress(users[2].address);
         expect(helperData.jettonWallet).toEqualAddress(
             await jettonMinter.getWalletAddressOf(
-                (await master.getHelper(usersJettonWallet[2].address, users[2].address)).address,
+                (await master.getHelper(usersJettonWallet[2].address, users[2].address, 0n)).address,
             ),
         );
         expect(helperData.ownerJettonWallet).toEqualAddress(usersJettonWallet[2].address);
@@ -2105,7 +2134,7 @@ describe('Master', () => {
                 .storeAddress(users[2].address)
                 .storeAddress(
                     await jettonMinter.getWalletAddressOf(
-                        (await master.getHelper(usersJettonWallet[2].address, users[2].address)).address,
+                        (await master.getHelper(usersJettonWallet[2].address, users[2].address, 0n)).address,
                     ),
                 )
                 .storeAddress(usersJettonWallet[2].address)
@@ -2116,7 +2145,9 @@ describe('Master', () => {
         );
 
         let helper = blockchain.openContract(
-            Helper.createFromAddress((await master.getHelper(usersJettonWallet[2].address, users[2].address)).address),
+            Helper.createFromAddress(
+                (await master.getHelper(usersJettonWallet[2].address, users[2].address, 0n)).address,
+            ),
         );
 
         let helperData = await helper.getContractData();
@@ -2124,7 +2155,7 @@ describe('Master', () => {
         expect(helperData.owner).toEqualAddress(users[2].address);
         expect(helperData.jettonWallet).toEqualAddress(
             await jettonMinter.getWalletAddressOf(
-                (await master.getHelper(usersJettonWallet[2].address, users[2].address)).address,
+                (await master.getHelper(usersJettonWallet[2].address, users[2].address, 0n)).address,
             ),
         );
         expect(helperData.ownerJettonWallet).toEqualAddress(usersJettonWallet[2].address);
@@ -2145,7 +2176,7 @@ describe('Master', () => {
         expect(helperData.owner).toEqualAddress(users[2].address);
         expect(helperData.jettonWallet).toEqualAddress(
             await jettonMinter.getWalletAddressOf(
-                (await master.getHelper(usersJettonWallet[2].address, users[2].address)).address,
+                (await master.getHelper(usersJettonWallet[2].address, users[2].address, 0n)).address,
             ),
         );
         expect(helperData.ownerJettonWallet).toEqualAddress(usersJettonWallet[2].address);
@@ -2169,7 +2200,7 @@ describe('Master', () => {
         expect(helperData.owner).toEqualAddress(users[2].address);
         expect(helperData.jettonWallet).toEqualAddress(
             await jettonMinter.getWalletAddressOf(
-                (await master.getHelper(usersJettonWallet[2].address, users[2].address)).address,
+                (await master.getHelper(usersJettonWallet[2].address, users[2].address, 0n)).address,
             ),
         );
         expect(helperData.ownerJettonWallet).toEqualAddress(usersJettonWallet[2].address);
@@ -2195,7 +2226,7 @@ describe('Master', () => {
         expect(helperData.owner).toEqualAddress(users[2].address);
         expect(helperData.jettonWallet).toEqualAddress(
             await jettonMinter.getWalletAddressOf(
-                (await master.getHelper(usersJettonWallet[2].address, users[2].address)).address,
+                (await master.getHelper(usersJettonWallet[2].address, users[2].address, 0n)).address,
             ),
         );
         expect(helperData.ownerJettonWallet).toEqualAddress(usersJettonWallet[2].address);
@@ -2241,7 +2272,7 @@ describe('Master', () => {
                 .storeAddress(users[2].address)
                 .storeAddress(
                     await jettonMinter.getWalletAddressOf(
-                        (await master.getHelper(usersJettonWallet[2].address, users[2].address)).address,
+                        (await master.getHelper(usersJettonWallet[2].address, users[2].address, 0n)).address,
                     ),
                 )
                 .storeAddress(usersJettonWallet[2].address)
@@ -2252,7 +2283,9 @@ describe('Master', () => {
         );
 
         let helper = blockchain.openContract(
-            Helper.createFromAddress((await master.getHelper(usersJettonWallet[2].address, users[2].address)).address),
+            Helper.createFromAddress(
+                (await master.getHelper(usersJettonWallet[2].address, users[2].address, 0n)).address,
+            ),
         );
 
         let helperData = await helper.getContractData();
@@ -2260,7 +2293,7 @@ describe('Master', () => {
         expect(helperData.owner).toEqualAddress(users[2].address);
         expect(helperData.jettonWallet).toEqualAddress(
             await jettonMinter.getWalletAddressOf(
-                (await master.getHelper(usersJettonWallet[2].address, users[2].address)).address,
+                (await master.getHelper(usersJettonWallet[2].address, users[2].address, 0n)).address,
             ),
         );
         expect(helperData.ownerJettonWallet).toEqualAddress(usersJettonWallet[2].address);
@@ -2281,7 +2314,7 @@ describe('Master', () => {
         expect(helperData.owner).toEqualAddress(users[2].address);
         expect(helperData.jettonWallet).toEqualAddress(
             await jettonMinter.getWalletAddressOf(
-                (await master.getHelper(usersJettonWallet[2].address, users[2].address)).address,
+                (await master.getHelper(usersJettonWallet[2].address, users[2].address, 0n)).address,
             ),
         );
         expect(helperData.ownerJettonWallet).toEqualAddress(usersJettonWallet[2].address);
@@ -2305,7 +2338,7 @@ describe('Master', () => {
         expect(helperData.owner).toEqualAddress(users[2].address);
         expect(helperData.jettonWallet).toEqualAddress(
             await jettonMinter.getWalletAddressOf(
-                (await master.getHelper(usersJettonWallet[2].address, users[2].address)).address,
+                (await master.getHelper(usersJettonWallet[2].address, users[2].address, 0n)).address,
             ),
         );
         expect(helperData.ownerJettonWallet).toEqualAddress(usersJettonWallet[2].address);
@@ -2335,7 +2368,7 @@ describe('Master', () => {
         expect(helperData.owner).toEqualAddress(users[2].address);
         expect(helperData.jettonWallet).toEqualAddress(
             await jettonMinter.getWalletAddressOf(
-                (await master.getHelper(usersJettonWallet[2].address, users[2].address)).address,
+                (await master.getHelper(usersJettonWallet[2].address, users[2].address, 0n)).address,
             ),
         );
         expect(helperData.ownerJettonWallet).toEqualAddress(usersJettonWallet[2].address);
@@ -2365,7 +2398,7 @@ describe('Master', () => {
         expect(helperData.owner).toEqualAddress(users[2].address);
         expect(helperData.jettonWallet).toEqualAddress(
             await jettonMinter.getWalletAddressOf(
-                (await master.getHelper(usersJettonWallet[2].address, users[2].address)).address,
+                (await master.getHelper(usersJettonWallet[2].address, users[2].address, 0n)).address,
             ),
         );
         expect(helperData.ownerJettonWallet).toEqualAddress(usersJettonWallet[2].address);

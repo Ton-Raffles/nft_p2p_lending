@@ -1,6 +1,7 @@
 import { Address, beginCell, Cell, Contract, contractAddress, ContractProvider, Sender, SendMode } from '@ton/core';
 
 export type HelperConfig = {
+    helperId: bigint;
     master: Address;
     jettonWallet: Address;
     ownerJettonWallet: Address;
@@ -16,6 +17,7 @@ export function helperConfigToCell(config: HelperConfig): Cell {
     return beginCell()
         .storeRef(
             beginCell()
+                .storeUint(config.helperId, 64)
                 .storeAddress(config.master)
                 .storeAddress(config.jettonWallet)
                 .storeAddress(config.ownerJettonWallet)
@@ -181,6 +183,7 @@ export class Helper implements Contract {
     }
 
     async getContractData(provider: ContractProvider): Promise<{
+        helperId: bigint;
         master: Address;
         jettonWallet: Address;
         ownerJettonWallet: Address;
@@ -199,6 +202,7 @@ export class Helper implements Contract {
     }> {
         const res = (await provider.get('get_contract_data', [])).stack;
         return {
+            helperId: res.readBigNumber(),
             master: res.readAddress(),
             jettonWallet: res.readAddress(),
             ownerJettonWallet: res.readAddress(),
