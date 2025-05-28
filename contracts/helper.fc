@@ -37,16 +37,6 @@
         }
     }
 
-    elseif (context::op == op::change_amount_helper) {
-        throw_unless(error::wrong_sender, equal_slices(context::sender, data::owner));
-        throw_unless(error::offer_alredy_accepted, data::accepted == 0);
-        int amount = in_msg_body~load_coins();
-        throw_unless(error::not_correct_value, data::amount >= amount);
-
-        send_jettons(data::jetton_wallet, msg_value - get_compute_fee(0, const::fee_const_min), data::amount - amount, data::owner);
-        data::amount = amount;
-    }
-
     elseif (context::op == op::accept) {
         throw_unless(error::wrong_sender, equal_slices(context::sender, data::master_owner));
         throw_unless(error::offer_alredy_accepted, data::accepted == 0);
