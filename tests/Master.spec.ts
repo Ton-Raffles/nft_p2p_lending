@@ -27,6 +27,7 @@ describe('Master', () => {
 
     let blockchain: Blockchain;
     let master: SandboxContract<Master>;
+    let masterTon: SandboxContract<Master>;
     let jettonMinter: SandboxContract<JettonMinter>;
     let collection: SandboxContract<NFTCollection>;
     let users: SandboxContract<TreasuryContract>[];
@@ -114,9 +115,37 @@ describe('Master', () => {
             ),
         );
 
+        masterTon = blockchain.openContract(
+            Master.createFromConfig(
+                {
+                    owner: users[0].address,
+                    nft: item.address,
+                    jettonWallet: users[0].address,
+                    offers: Dictionary.empty(Dictionary.Keys.Address()),
+                    amount: toNano('1000'),
+                    loanDuration: 100n,
+                    aprAmount: toNano('100'),
+                    helperCode: codeHelper,
+                    platform: users[3].address,
+                    nftFee: toNano('0.03'),
+                    platformFee: toNano('0.1'),
+                },
+                codeMaster,
+            ),
+        );
+
         const deployer = await blockchain.treasury('deployer');
 
         const deployResult = await master.sendDeploy(deployer.getSender(), toNano('0.05'));
+
+        const deployResultTon = await masterTon.sendDeploy(deployer.getSender(), toNano('0.05'));
+
+        expect(deployResultTon.transactions).toHaveTransaction({
+            from: deployer.address,
+            to: masterTon.address,
+            deploy: true,
+            success: true,
+        });
 
         expect(deployResult.transactions).toHaveTransaction({
             from: deployer.address,
@@ -128,6 +157,11 @@ describe('Master', () => {
         master.sendChangeData(users[0].getSender(), toNano('0.05'), {
             queryId: 0n,
             jettonWallet: await jettonMinter.getWalletAddressOf(master.address),
+        });
+
+        masterTon.sendChangeData(users[0].getSender(), toNano('0.05'), {
+            queryId: 0n,
+            jettonWallet: Address.parse('UQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAJKZ'),
         });
     });
 
@@ -638,6 +672,92 @@ describe('Master', () => {
         expect(helperData.ownerJettonWallet).toEqualAddress(usersJettonWallet[2].address);
         expect(helperData.paidAmount).toEqual(0n);
         expect(helperData.amount).toEqual(toNano('1000'));
+        expect(helperData.aprAmount).toEqual(toNano('100'));
+        expect(helperData.platform).toEqualAddress(users[3].address);
+        expect(helperData.loanDuration).toEqual(100n);
+        expect(helperData.accepted).toEqual(1600000000n);
+        expect(helperData.masterOwner).toEqualAddress(users[0].address);
+    });
+
+    it('should change amount helper', async () => {
+        const item = blockchain.openContract(await collection.getNftItemByIndex(0n));
+
+        let masterData = await masterTon.getContractData();
+        expect(masterData.active).toEqual(0n);
+
+        let res = await item.sendTransfer(users[0].getSender(), toNano('1'), masterTon.address);
+
+        masterData = await masterTon.getContractData();
+        expect(masterData.active).toEqual(1n);
+        expect(masterData.nft).toEqualAddress(item.address);
+        expect(masterData.owner).toEqualAddress(users[0].address);
+        expect(masterData.jettonWallet).toEqualAddress(
+            Address.parse('UQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAJKZ'),
+        );
+        expect(masterData.loanDuration).toEqual(100n);
+        expect(masterData.amount).toEqual(toNano('1000'));
+        expect(masterData.aprAmount).toEqual(toNano('100'));
+        expect(masterData.platform).toEqualAddress(users[3].address);
+
+        res = await masterTon.sendMakeOffer(users[0].getSender(), toNano('1001'), {
+            queryId: 0n,
+            owner: users[2].address,
+            offerAmount: toNano('1000'),
+            aprAmount: toNano('100'),
+            loanDuration: 100n,
+        });
+
+        let helper = blockchain.openContract(
+            Helper.createFromAddress(
+                (
+                    await masterTon.getHelper(
+                        Address.parse('UQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAJKZ'),
+                        users[2].address,
+                        0n,
+                    )
+                ).address,
+            ),
+        );
+
+        let helperData = await helper.getContractData();
+        expect(helperData.master).toEqualAddress(masterTon.address);
+        expect(helperData.owner).toEqualAddress(users[2].address);
+        expect(helperData.jettonWallet).toEqualAddress(
+            Address.parse('UQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAJKZ'),
+        );
+        expect(helperData.ownerJettonWallet).toEqualAddress(
+            Address.parse('UQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAJKZ'),
+        );
+        expect(helperData.paidAmount).toEqual(0n);
+        expect(helperData.amount).toEqual(toNano('1000'));
+        expect(helperData.aprAmount).toEqual(toNano('100'));
+        expect(helperData.platform).toEqualAddress(users[3].address);
+        expect(helperData.loanDuration).toEqual(100n);
+        expect(helperData.accepted).toEqual(0n);
+        expect(helperData.masterOwner).toEqualAddress(users[0].address);
+
+        res = await helper.sendChangeAmount(users[0].getSender(), toNano('1'), {
+            queryId: 0n,
+        });
+
+        helperData = await helper.getContractData();
+        expect(helperData.amount).toEqual(1000992000000n);
+
+        res = await helper.sendAccept(users[0].getSender(), toNano('0.10'), {
+            queryId: 0n,
+        });
+
+        helperData = await helper.getContractData();
+        expect(helperData.master).toEqualAddress(masterTon.address);
+        expect(helperData.owner).toEqualAddress(users[2].address);
+        expect(helperData.jettonWallet).toEqualAddress(
+            Address.parse('UQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAJKZ'),
+        );
+        expect(helperData.ownerJettonWallet).toEqualAddress(
+            Address.parse('UQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAJKZ'),
+        );
+        expect(helperData.paidAmount).toEqual(0n);
+        expect(helperData.amount).toEqual(1000992000000n);
         expect(helperData.aprAmount).toEqual(toNano('100'));
         expect(helperData.platform).toEqualAddress(users[3].address);
         expect(helperData.loanDuration).toEqual(100n);

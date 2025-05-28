@@ -124,13 +124,12 @@ export class Helper implements Contract {
         value: bigint,
         opts: {
             queryId: bigint;
-            amount: bigint;
         },
     ) {
         await provider.internal(via, {
             value,
             sendMode: SendMode.PAY_GAS_SEPARATELY,
-            body: beginCell().storeUint(0x1eae57b3, 32).storeUint(opts.queryId, 64).storeCoins(opts.amount).endCell(),
+            body: beginCell().storeUint(0x1eae57b3, 32).storeUint(opts.queryId, 64).endCell(),
         });
     }
 
