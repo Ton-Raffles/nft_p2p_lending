@@ -124,12 +124,13 @@ export class Helper implements Contract {
         value: bigint,
         opts: {
             queryId: bigint;
+            amount: bigint;
         },
     ) {
         await provider.internal(via, {
             value,
             sendMode: SendMode.PAY_GAS_SEPARATELY,
-            body: beginCell().storeUint(0x1eae57b3, 32).storeUint(opts.queryId, 64).endCell(),
+            body: beginCell().storeUint(0x1eae57b3, 32).storeUint(opts.queryId, 64).storeCoins(opts.amount).endCell(),
         });
     }
 
@@ -182,6 +183,7 @@ export class Helper implements Contract {
     }
 
     async getContractData(provider: ContractProvider): Promise<{
+        isActive: boolean;
         helperId: bigint;
         master: Address;
         jettonWallet: Address;
@@ -201,6 +203,7 @@ export class Helper implements Contract {
     }> {
         const res = (await provider.get('get_contract_data', [])).stack;
         return {
+            isActive: res.readBoolean(),
             helperId: res.readBigNumber(),
             master: res.readAddress(),
             jettonWallet: res.readAddress(),

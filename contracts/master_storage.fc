@@ -66,6 +66,7 @@ global slice context::sender;
         .store_dict(data::helper_code)
         .store_dict(begin_cell()
             .store_ref(begin_cell()
+                .store_int(0, 1)
                 .store_uint(helper_id, 64)
                 .store_slice(my_address())
                 .store_uint(0, 2)

@@ -738,10 +738,11 @@ describe('Master', () => {
 
         res = await helper.sendChangeAmount(users[0].getSender(), toNano('1'), {
             queryId: 0n,
+            amount: toNano('1000.5'),
         });
 
         helperData = await helper.getContractData();
-        expect(helperData.amount).toEqual(1000992000000n);
+        expect(helperData.amount).toEqual(toNano('1000.5'));
 
         res = await helper.sendAccept(users[0].getSender(), toNano('0.10'), {
             queryId: 0n,
@@ -757,7 +758,7 @@ describe('Master', () => {
             Address.parse('UQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAJKZ'),
         );
         expect(helperData.paidAmount).toEqual(0n);
-        expect(helperData.amount).toEqual(1000992000000n);
+        expect(helperData.amount).toEqual(toNano('1000.5'));
         expect(helperData.aprAmount).toEqual(toNano('100'));
         expect(helperData.platform).toEqualAddress(users[3].address);
         expect(helperData.loanDuration).toEqual(100n);
@@ -1211,6 +1212,9 @@ describe('Master', () => {
         await helper.sendCencel(users[2].getSender(), toNano('0.05'), {
             queryId: 0n,
         });
+
+        helperData = await helper.getContractData();
+        expect(helperData.isActive).toEqual(false);
     });
 
     it('should not delete offer (offer accepted)', async () => {
@@ -1494,6 +1498,9 @@ describe('Master', () => {
         expect(await usersJettonWallet[3].getJettonBalance()).toEqual(toNano('10'));
         expect(await item.getOwner()).toEqualAddress(users[0].address);
         expect(await usersJettonWallet[2].getJettonBalance()).toEqual(toNano('90') + balance);
+
+        helperData = await helper.getContractData();
+        expect(helperData.isActive).toEqual(false);
     });
 
     it('should pay out ton', async () => {
