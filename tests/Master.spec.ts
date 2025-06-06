@@ -244,6 +244,83 @@ describe('Master', () => {
         });
     });
 
+    it('should delete lending with offer', async () => {
+        const item = blockchain.openContract(await collection.getNftItemByIndex(0n));
+
+        let masterData = await master.getContractData();
+        expect(masterData.active).toEqual(0n);
+
+        let res = await item.sendTransfer(users[0].getSender(), toNano('1'), master.address);
+
+        masterData = await master.getContractData();
+        expect(masterData.active).toEqual(1n);
+        expect(masterData.nft).toEqualAddress(item.address);
+        expect(masterData.owner).toEqualAddress(users[0].address);
+        expect(masterData.jettonWallet).toEqualAddress(await jettonMinter.getWalletAddressOf(master.address));
+        expect(masterData.loanDuration).toEqual(100n);
+        expect(masterData.amount).toEqual(toNano('1000'));
+        expect(masterData.aprAmount).toEqual(toNano('100'));
+        expect(masterData.platform).toEqualAddress(users[3].address);
+
+        res = await usersJettonWallet[2].sendTransfer(
+            users[2].getSender(),
+            toNano('0.05'),
+            toNano('0.25'),
+            master.address,
+            toNano('1000'),
+
+            beginCell()
+                .storeUint(0x2c504e2d, 32)
+                .storeAddress(users[2].address)
+                .storeAddress(
+                    await jettonMinter.getWalletAddressOf(
+                        (await master.getHelper(usersJettonWallet[2].address, users[2].address, 0n)).address,
+                    ),
+                )
+                .storeAddress(usersJettonWallet[2].address)
+                .storeRef(
+                    beginCell().storeCoins(toNano('1000')).storeCoins(toNano('100')).storeUint(100n, 64).endCell(),
+                )
+                .endCell(),
+        );
+
+        expect(res.transactions).toHaveTransaction({
+            from: master.address,
+            to: (await master.getHelper(usersJettonWallet[2].address, users[2].address, 0n)).address,
+            deploy: true,
+            success: true,
+        });
+
+        let helperData = await blockchain
+            .openContract(
+                Helper.createFromAddress(
+                    (await master.getHelper(usersJettonWallet[2].address, users[2].address, 0n)).address,
+                ),
+            )
+            .getContractData();
+        expect(helperData.master).toEqualAddress(master.address);
+        expect(helperData.owner).toEqualAddress(users[2].address);
+        expect(helperData.jettonWallet).toEqualAddress(
+            await jettonMinter.getWalletAddressOf(
+                (await master.getHelper(usersJettonWallet[2].address, users[2].address, 0n)).address,
+            ),
+        );
+        expect(helperData.ownerJettonWallet).toEqualAddress(usersJettonWallet[2].address);
+        expect(helperData.paidAmount).toEqual(0n);
+        expect(helperData.amount).toEqual(toNano('1000'));
+        expect(helperData.aprAmount).toEqual(toNano('100'));
+        expect(helperData.platform).toEqualAddress(users[3].address);
+        expect(helperData.loanDuration).toEqual(100n);
+        expect(helperData.accepted).toEqual(0n);
+        expect(helperData.masterOwner).toEqualAddress(users[0].address);
+
+        res = await master.sendCencel(users[0].getSender(), toNano('0.05'), {
+            queryId: 0n,
+        });
+
+        expect(await item.getOwner()).toEqualAddress(users[0].address);
+    });
+
     it('should deploy offer', async () => {
         const item = blockchain.openContract(await collection.getNftItemByIndex(0n));
 
