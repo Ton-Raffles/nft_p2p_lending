@@ -139,7 +139,7 @@
             (cell stateinit, slice address) = get_stateinit_and_address_of_helper(owner_jetton_wallet, user, data::current_helper_id);
             data::current_helper_id += 1;
 
-            send_set_data(address, stateinit, 0, context::query_id, helper_jetton_wallet, offer_amount, loan_duration, apr_amount);
+            send_set_data(address, stateinit, const::fee_for_transfer_jettons, context::query_id, helper_jetton_wallet, offer_amount, loan_duration, apr_amount);
             msg_value -= get_compute_fee(0, const::fee_const);
 
             send_jettons(context::sender, const::fee_for_transfer_jettons, offer_amount, address);

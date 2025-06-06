@@ -79,6 +79,14 @@ describe('Master', () => {
             toNano('10000'),
         );
 
+        await jettonMinter.sendMint(
+            users[0].getSender(),
+            toNano('0.05'),
+            toNano('0.1'),
+            users[3].address,
+            toNano('10000'),
+        );
+
         collection = blockchain.openContract(
             NFTCollection.createFromConfig(
                 {
@@ -672,7 +680,7 @@ describe('Master', () => {
         ).not.toEqual('active');
     });
 
-    it('should accept offer', async () => {
+    it.only('should accept offer', async () => {
         const item = blockchain.openContract(await collection.getNftItemByIndex(0n));
 
         let masterData = await master.getContractData();
@@ -734,9 +742,55 @@ describe('Master', () => {
         expect(helperData.accepted).toEqual(0n);
         expect(helperData.masterOwner).toEqualAddress(users[0].address);
 
+        res = await usersJettonWallet[3].sendTransfer(
+            users[3].getSender(),
+            toNano('0.05'),
+            toNano('0.25'),
+            master.address,
+            toNano('1000'),
+            beginCell()
+                .storeUint(0x2c504e2d, 32)
+                .storeAddress(users[3].address)
+                .storeAddress(
+                    await jettonMinter.getWalletAddressOf(
+                        (await master.getHelper(usersJettonWallet[3].address, users[3].address, 1n)).address,
+                    ),
+                )
+                .storeAddress(usersJettonWallet[3].address)
+                .storeRef(
+                    beginCell().storeCoins(toNano('1000')).storeCoins(toNano('100')).storeUint(100n, 64).endCell(),
+                )
+                .endCell(),
+        );
+
+        let helper2 = blockchain.openContract(
+            Helper.createFromAddress(
+                (await master.getHelper(usersJettonWallet[3].address, users[3].address, 1n)).address,
+            ),
+        );
+
+        let helperData2 = await helper2.getContractData();
+        expect(helperData2.master).toEqualAddress(master.address);
+        expect(helperData2.owner).toEqualAddress(users[3].address);
+        expect(helperData2.jettonWallet).toEqualAddress(
+            await jettonMinter.getWalletAddressOf(
+                (await master.getHelper(usersJettonWallet[3].address, users[3].address, 1n)).address,
+            ),
+        );
+        expect(helperData2.ownerJettonWallet).toEqualAddress(usersJettonWallet[3].address);
+        expect(helperData2.paidAmount).toEqual(0n);
+        expect(helperData2.amount).toEqual(toNano('1000'));
+        expect(helperData2.aprAmount).toEqual(toNano('100'));
+        expect(helperData2.platform).toEqualAddress(users[3].address);
+        expect(helperData2.loanDuration).toEqual(100n);
+        expect(helperData2.accepted).toEqual(0n);
+        expect(helperData2.masterOwner).toEqualAddress(users[0].address);
+
         res = await helper.sendAccept(users[0].getSender(), toNano('0.10'), {
             queryId: 0n,
         });
+
+        printTransactionFees(res.transactions);
 
         helperData = await helper.getContractData();
         expect(helperData.master).toEqualAddress(master.address);
