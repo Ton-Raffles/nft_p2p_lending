@@ -170,8 +170,6 @@
             send_process_cancellation(data::master, context::query_id);
         }
 
-        ~dump(data::helper_id);
-
         data::is_active = false;
 
         ifnot (equal_slice_bits(data::jetton_wallet, const::ton_key)) {

@@ -207,7 +207,7 @@
 
         send_nft(data::nft, data::nft_fee, context::query_id, user);
 
-        send_destroy(data::owner);
+        send_destroy(user);
     }
 
     elseif (context::op == op::return_nft) {
@@ -218,7 +218,7 @@
 
         send_nft(data::nft, data::nft_fee, context::query_id, data::owner);
 
-        send_destroy(data::owner);
+        send_destroy(user);
     }
 
     elseif (context::op == op::send_service_message) {

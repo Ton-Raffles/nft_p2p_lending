@@ -680,7 +680,7 @@ describe('Master', () => {
         ).not.toEqual('active');
     });
 
-    it.only('should accept offer', async () => {
+    it('should accept offer', async () => {
         const item = blockchain.openContract(await collection.getNftItemByIndex(0n));
 
         let masterData = await master.getContractData();
@@ -789,8 +789,6 @@ describe('Master', () => {
         res = await helper.sendAccept(users[0].getSender(), toNano('0.10'), {
             queryId: 0n,
         });
-
-        printTransactionFees(res.transactions);
 
         helperData = await helper.getContractData();
         expect(helperData.master).toEqualAddress(master.address);
@@ -1626,7 +1624,7 @@ describe('Master', () => {
             Cell.EMPTY,
         );
 
-        expect(await usersJettonWallet[3].getJettonBalance()).toEqual(toNano('10'));
+        expect(await usersJettonWallet[3].getJettonBalance()).toEqual(toNano('10') + toNano('10000'));
         expect(await item.getOwner()).toEqualAddress(users[0].address);
         expect(await usersJettonWallet[2].getJettonBalance()).toEqual(toNano('90') + balance);
 
@@ -1874,8 +1872,6 @@ describe('Master', () => {
             aprAmount: toNano('1'),
             loanDuration: 100n,
         });
-
-        printTransactionFees(res.transactions);
 
         let helper = blockchain.openContract(
             Helper.createFromAddress(
