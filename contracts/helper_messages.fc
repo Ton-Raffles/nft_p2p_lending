@@ -44,6 +44,7 @@
         .store_uint(0, 107)
         .store_uint(op::return_nft, 32)
         .store_uint(query_id, 64)
+        .store_slice(data::owner)
     .end_cell(), 1);
 }
 
